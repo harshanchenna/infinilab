@@ -160,7 +160,7 @@ def propose(budget: float = BUDGET) -> str | None:
 
     print(f"-> proposer ({PROPOSER_MODEL}) writing {expected_prefix}*.py ...")
     try:
-        subprocess.run(cmd, cwd=ROOT, timeout=900, text=True)
+        subprocess.run(cmd, cwd=ROOT, timeout=900, text=True, stdin=subprocess.DEVNULL)
     except (FileNotFoundError, subprocess.TimeoutExpired) as e:
         print(f"   proposer failed: {e}")
         return None

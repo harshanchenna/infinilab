@@ -66,6 +66,7 @@ def review(module_path: str, verdict, timeout: int = 600) -> tuple[Optional[str]
             ["claude", "-p", user_msg, "--model", SKEPTIC_MODEL,
              "--append-system-prompt", system],
             capture_output=True, text=True, timeout=timeout,
+            stdin=subprocess.DEVNULL,
         )
     except (FileNotFoundError, subprocess.TimeoutExpired) as e:
         return None, f"skeptic invocation failed: {e}"
