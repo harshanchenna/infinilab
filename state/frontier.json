@@ -18,12 +18,12 @@
     "updated_at": 1781677445.6669946
   },
   "zero_verification": {
-    "claim": "All 52 nontrivial zeros with 0 < Im < 150.00 lie on the critical line: Hardy Z has exactly N(T)=52 sign changes.",
+    "claim": "All 341 nontrivial zeros with 0 < Im < 600.00 lie on the critical line: Hardy Z has exactly N(T)=341 sign changes.",
     "falsified": false,
     "frontier_metric": "T_verified",
-    "frontier_value": 150.0,
-    "iteration": 1,
-    "module": "experiments.exp_0001_critical_line",
-    "updated_at": 1781677413.184889
+    "frontier_value": 600.0,
+    "iteration": 4,
+    "module": "experiments.exp_0004_critical_line_high",
+    "updated_at": 1781679589.6245468
   }
 }

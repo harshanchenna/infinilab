@@ -8,3 +8,5 @@ Skeptic-vetted, reproducible facts kept by the loop.
 
 - **[lehmer_pairs]** Scanned first 300 zeros: smallest normalized gap 0.2911 between zeros #212 and #213 (heights 415.019, 415.455). All gaps positive; consistent with RH (no collision). (iter 3, `exp_0003_lehmer_pairs`, n_zeros_scanned=300, skeptic=sound)
 
+- **[zero_verification]** All 341 nontrivial zeros with 0 < Im < 600.00 lie on the critical line: Hardy Z has exactly N(T)=341 sign changes. (iter 4, `exp_0004_critical_line_high`, T_verified=600, skeptic=sound)
+
