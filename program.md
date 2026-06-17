@@ -70,7 +70,16 @@ lives in `harness/experiment.py::TRACKS`.)
 - Stay within the wall-clock budget; return the best result so far.
 - Prefer small, sharp, correct experiments over sprawling ones.
 
-## Current focus
-Bootstrap the frontier on `zero_verification` and `zero_statistics`, then branch
-into `lehmer_pairs` and `li_criterion`. See `state/frontier.json` for live state
-and `state/knowledge_base.md` for what we know so far.
+## Current focus (updated after the 9-iteration meta pass)
+**Certification is the priority.** Arb gives theorem-grade results cheaply, so:
+1. Push `certified_zero_verification` (certified_T) toward Platt-Trudgian
+   territory; make the certified walk incremental/resumable.
+2. Build CERTIFIED versions of other criteria: Robin via rigorous Arb logs,
+   rigorous Li positivity via a proven power-sum tail bound (needs an explicit
+   N(t) bound, e.g. Trudgian).
+3. Heuristic `zero_verification` is now SUPERSEDED by the certified track for
+   verification — keep it only for cheap reconnaissance.
+Other live tracks (`zero_statistics`, `lehmer_pairs`, `li_criterion`,
+`robin_inequality`, `explicit_formula`) remain open. See `state/frontier.json`
+for live state, `state/knowledge_base.md` for facts, `research/meta_log.md` for
+process history.

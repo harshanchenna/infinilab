@@ -37,3 +37,22 @@ claim (two truncations K and 2K, require positive + monotone-increasing), kept,
 skeptic verdict sound. STILL OPEN: a *rigorous* certified-positive version with a
 proven tail bound (interval arithmetic on the S_j tail) so positivity becomes a
 theorem-grade signal rather than "consistent with".
+
+## 2026-06-17 — meta pass after 9 iterations: certification changes priorities
+**Signals (from ledger/frontier).** 9 iterations, 7 tracks, all kept, all skeptic
+`sound`. The decisive development: the `certified_zero_verification` track (Arb,
+theorem-grade) reached T=2000, now EXCEEDING the heuristic `zero_verification`
+frontier (T=600) at negligible cost (~0.4 ms/Hardy-Z eval). Heuristic sign-change
+counting is therefore largely SUPERSEDED for verification — it survives only as
+cheap reconnaissance.
+**Meta-meta read.** This vindicates the landscape.md thesis "hard gate for truth":
+we now have a tier that is not merely un-gameable but *theorem-grade*. The highest
+marginal value is converting more tracks from "consistent with RH" to "proven".
+**Change.** (1) Re-point program.md focus: push certified_T toward Platt-Trudgian
+territory and build CERTIFIED versions of other criteria (Robin via Arb logs;
+rigorous Li positivity via a proven power-sum tail bound). (2) Demote heuristic
+`zero_verification` to reconnaissance in program.md. (3) Logged here.
+**Open meta tasks.** (a) Incremental/resumable certified walk (avoid recomputing
+from t=0 each run). (b) Rigorous Li tail bound (needs an explicit N(t) bound,
+e.g. Trudgian) to make positivity theorem-grade. (c) Exact Lehmer-pair ->
+de Bruijn-Newman lower-bound formula before claiming a Lambda bound.
