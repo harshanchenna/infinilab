@@ -56,3 +56,22 @@ rigorous Li positivity via a proven power-sum tail bound). (2) Demote heuristic
 from t=0 each run). (b) Rigorous Li tail bound (needs an explicit N(t) bound,
 e.g. Trudgian) to make positivity theorem-grade. (c) Exact Lehmer-pair ->
 de Bruijn-Newman lower-bound formula before claiming a Lambda bound.
+
+## 2026-06-17 — conjecture discovery attempt: skeptic demoted an overclaim
+**Signal.** exp_0013 ran a Ramanujan-Machine-style PSLQ search: validated the
+engine on a planted identity (recovered [2,-2,-1,1]), then found NO low-complexity
+closed form for gamma_1 (the 80-digit candidate had norm ~1e5 and did not persist
+to 140 digits -> spurious) and NO small integer relation among the first 6 zeros
+and pi. Honest null. But it was labeled novelty="conjecture", and the skeptic
+correctly demoted it as **overclaimed**: a null independence check is an expected
+belief, not a newly discovered conjecture. Result: kept=False, frontier NOT
+advanced. The novelty-policing rule worked.
+**Lesson.** (1) A guaranteed-null structural search is `frontier-search`, not
+`conjecture`. (2) To produce a real `conjecture` entry, the engine needs a target
+where a non-trivial relation is plausible (and ideally a known closed form to
+rediscover as positive validation) -- but sums OVER zeros are precision-limited by
+slow tails, so good high-precision targets are scarce. Genuine new conjectures are
+hard; honest nulls are the common outcome.
+**Action.** No relabel-to-pass (that is the gaming we guard against). Keep the
+demoted record in git as an honest negative. Future conjecture-discovery
+experiments must justify why a find would be novel.

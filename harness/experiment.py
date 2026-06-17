@@ -43,6 +43,7 @@ TRACKS = {
     "de_bruijn_newman": "Bounds on the de Bruijn-Newman constant Lambda (RH <=> Lambda <= 0).",
     "explicit_formula": "Riemann's explicit formula linking zeros and primes; residual checks.",
     "robin_inequality": "Robin's inequality sigma(n) < e^gamma n log log n for n > 5040 (<=> RH).",
+    "conjecture_discovery": "Search for new closed forms / integer relations among zeros and constants (Ramanujan-Machine style).",
 }
 
 # Novelty classes. The loop must privilege genuine-unknown work over reproducing
