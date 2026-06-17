@@ -152,11 +152,14 @@ def propose(budget: float = BUDGET) -> str | None:
         f"=== CURRENT STATE ===\n{context}\n"
     )
 
-    skip_perms = os.environ.get("INFINILAB_SKIP_PERMISSIONS", "1") == "1"
+    # Headless file writing needs a non-interactive permission mode. We default
+    # to acceptEdits (auto-approve file writes), which -- unlike
+    # --dangerously-skip-permissions -- is allowed when running as root. Override
+    # with INFINILAB_PERMISSION_MODE if desired.
+    perm_mode = os.environ.get("INFINILAB_PERMISSION_MODE", "acceptEdits")
     cmd = ["claude", "-p", task, "--model", PROPOSER_MODEL,
+           "--permission-mode", perm_mode,
            "--append-system-prompt", system]
-    if skip_perms:
-        cmd.append("--dangerously-skip-permissions")
 
     print(f"-> proposer ({PROPOSER_MODEL}) writing {expected_prefix}*.py ...")
     try:
