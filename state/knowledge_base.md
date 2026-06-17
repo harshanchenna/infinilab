@@ -22,3 +22,5 @@ Skeptic-vetted, reproducible facts kept by the loop.
 
 - **[certified_zero_verification]** CERTIFIED: all zeros up to T=5000 proven on the critical line via Arb ball arithmetic (4785 proven on-line zeros, matching N(T) at every 250-step checkpoint, no uncertified points). Halted: count/parity mismatch at T=5250 (proven=4785, N(T)=4787, uncertified=0). (iter 10, `exp_0010_certified_10k`, certified_T=5000, skeptic=sound)
 
+- **[lehmer_pairs]** Resolved 267 zeros in (5000,5250]; closest pair at heights 5229.1986, 5229.2418 with raw gap 0.04325 and normalized gap delta=0.0463 (NEW lab record close pair (<0.291)). A genuine near-Lehmer pair; all gaps positive, consistent with RH. (iter 11, `exp_0011_lehmer_hunt_5250`, inverse_min_normalized_gap=21.6031, skeptic=sound)
+

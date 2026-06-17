@@ -19,6 +19,16 @@
     "track": "explicit_formula",
     "updated_at": 1781681199.9571924
   },
+  "lehmer_pairs::inverse_min_normalized_gap": {
+    "claim": "Resolved 267 zeros in (5000,5250]; closest pair at heights 5229.1986, 5229.2418 with raw gap 0.04325 and normalized gap delta=0.0463 (NEW lab record close pair (<0.291)). A genuine near-Lehmer pair; all gaps positive, consistent with RH.",
+    "falsified": false,
+    "frontier_metric": "inverse_min_normalized_gap",
+    "frontier_value": 21.603120501137642,
+    "iteration": 11,
+    "module": "experiments.exp_0011_lehmer_hunt_5250",
+    "track": "lehmer_pairs",
+    "updated_at": 1781682183.1869462
+  },
   "lehmer_pairs::n_zeros_scanned": {
     "claim": "Scanned first 300 zeros: smallest normalized gap 0.2911 between zeros #212 and #213 (heights 415.019, 415.455). All gaps positive; consistent with RH (no collision).",
     "falsified": false,
