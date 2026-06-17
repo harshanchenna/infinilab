@@ -45,8 +45,18 @@ TRACKS = {
     "robin_inequality": "Robin's inequality sigma(n) < e^gamma n log log n for n > 5040 (<=> RH).",
 }
 
+# Novelty classes. The loop must privilege genuine-unknown work over reproducing
+# known facts. Be honest: most verification experiments are "reproduction".
+NOVELTY = {
+    "reproduction": "Re-derives a known result; validates machinery, not research.",
+    "frontier-search": "Open-ended search whose outcome is genuinely unknown to us.",
+    "conjecture": "Proposes a new empirical relation/pattern, tested to high precision.",
+    "falsification-attempt": "Actively hunts for a counterexample that would disprove RH (or a sub-conjecture).",
+}
+
 REQUIRED_FIELDS = (
     "track",
+    "novelty",
     "claim",
     "metrics",
     "frontier_metric",
@@ -67,10 +77,16 @@ def result(
     falsified: bool,
     consistent_with_rh: bool,
     evidence: dict,
+    novelty: str = "reproduction",
 ) -> dict:
-    """Build a Result dict, coercing mpmath numbers to plain floats/strings."""
+    """Build a Result dict, coercing mpmath numbers to plain floats/strings.
+
+    `novelty` defaults to "reproduction" so older experiments stay valid; genuine
+    frontier work must set it explicitly (see NOVELTY).
+    """
     return {
         "track": track,
+        "novelty": novelty,
         "claim": claim,
         "metrics": _jsonify(metrics),
         "frontier_metric": frontier_metric,
@@ -96,6 +112,8 @@ def validate(res: Any) -> dict:
         raise ResultError(
             f"Unknown track {res['track']!r}; known tracks: {sorted(TRACKS)}"
         )
+    if res["novelty"] not in NOVELTY:
+        raise ResultError(f"Unknown novelty {res['novelty']!r}; allowed: {sorted(NOVELTY)}")
     fv = res["frontier_value"]
     if not isinstance(fv, (int, float)) or not math.isfinite(fv):
         raise ResultError(f"frontier_value must be a finite number, got {fv!r}")

@@ -19,6 +19,21 @@ contract in `harness/experiment.py`:
 - `def run(budget_seconds: float) -> dict` that returns a Result built with
   `harness.experiment.result(...)`.
 
+# Aim at the frontier (this is the priority)
+Re-deriving known facts only validates the machinery -- it is not research. Each
+experiment must declare a `novelty` (see harness/experiment.py::NOVELTY):
+`reproduction`, `frontier-search`, `conjecture`, or `falsification-attempt`.
+**Strongly prefer the genuine-unknown classes.** Good frontier moves:
+- `falsification-attempt`: actively hunt for the thing that would DISPROVE RH or
+  a sub-conjecture (an off-line zero; a Robin violation among colossally abundant
+  numbers; a record-close Lehmer pair). Report the closest approach honestly.
+- `conjecture`: search for a NEW empirical relation/pattern (Ramanujan-Machine
+  style) and test it to high precision; surface survivors to research/conjectures.md.
+- `frontier-search`: open-ended search whose outcome we do not already know.
+Be honest: do NOT label a reproduction as frontier. Set `novelty="reproduction"`
+when that is what it is, and prefer to propose something genuinely unknown
+instead. The skeptic will challenge novelty overclaims.
+
 # Hard rules (the loop depends on these)
 1. **Never edit anything under `harness/`.** Those are trusted primitives. If
    you need a primitive that doesn't exist, compute it from existing ones inside

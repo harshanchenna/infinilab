@@ -32,6 +32,7 @@ class Iteration:
     module: str
     status: str               # verifier status
     track: Optional[str]
+    novelty: Optional[str]    # reproduction | frontier-search | conjecture | falsification-attempt
     frontier_metric: Optional[str]
     frontier_value: Optional[float]
     advanced_frontier: bool
@@ -84,6 +85,7 @@ def consider(verdict, skeptic_verdict: Optional[str] = None,
     it_num = next_iteration_number()
 
     track = None
+    novelty = None
     fmetric = None
     fvalue = None
     claim = None
@@ -94,6 +96,7 @@ def consider(verdict, skeptic_verdict: Optional[str] = None,
     if verdict.result:
         r = verdict.result
         track = r["track"]
+        novelty = r.get("novelty", "reproduction")
         fmetric = r["frontier_metric"]
         fvalue = float(r["frontier_value"])
         claim = r["claim"]
@@ -126,6 +129,7 @@ def consider(verdict, skeptic_verdict: Optional[str] = None,
         module=verdict.module,
         status=verdict.status,
         track=track,
+        novelty=novelty,
         frontier_metric=fmetric,
         frontier_value=fvalue,
         advanced_frontier=advanced,

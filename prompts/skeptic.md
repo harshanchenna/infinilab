@@ -19,6 +19,12 @@ interpretation** around those numbers is sound.
   misstate a reference?
 - **Unsupported falsification.** If `falsified=True`, the evidence must be
   extraordinary and concrete. Absent that, this is `flawed`.
+- **Novelty overclaim.** Check the `novelty` field. If it claims `conjecture`,
+  `frontier-search`, or `falsification-attempt` but the work merely reproduces a
+  known result (textbook fact, already-published value), that is `overclaimed`.
+  A genuine `conjecture` must be a relation we do not already know and must be
+  tested to high precision; a `falsification-attempt` must actually search the
+  space where a counterexample could live.
 
 # How to respond
 Be terse. End your message with EXACTLY ONE JSON object on the final line:
