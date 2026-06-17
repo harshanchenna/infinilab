@@ -14,3 +14,5 @@ Skeptic-vetted, reproducible facts kept by the loop.
 
 - **[li_criterion]** First 12 Keiper-Li coefficients estimated from 400 zeros are all positive (min lambda=0.0231) and increase from K=200 to K=400 (converging from below). Consistent with Li's criterion / RH. (iter 6, `exp_0006_li_positivity`, n_li_coefficients=12, skeptic=sound)
 
+- **[certified_zero_verification]** CERTIFIED: at least 52 zeros proven on the critical line up to T=150.00 via Arb ball arithmetic; matches N(T)=52 (Turing) with no uncertified points -> RH verified up to T=150.00. (iter 7, `exp_0007_certified_verification`, certified_T=150, skeptic=sound)
+

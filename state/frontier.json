@@ -1,4 +1,13 @@
 {
+  "certified_zero_verification": {
+    "claim": "CERTIFIED: at least 52 zeros proven on the critical line up to T=150.00 via Arb ball arithmetic; matches N(T)=52 (Turing) with no uncertified points -> RH verified up to T=150.00.",
+    "falsified": false,
+    "frontier_metric": "certified_T",
+    "frontier_value": 150.0,
+    "iteration": 7,
+    "module": "experiments.exp_0007_certified_verification",
+    "updated_at": 1781681099.1730983
+  },
   "lehmer_pairs": {
     "claim": "Scanned first 300 zeros: smallest normalized gap 0.2911 between zeros #212 and #213 (heights 415.019, 415.455). All gaps positive; consistent with RH (no collision).",
     "falsified": false,
