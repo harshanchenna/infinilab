@@ -20,3 +20,5 @@ Skeptic-vetted, reproducible facts kept by the loop.
 
 - **[certified_zero_verification]** CERTIFIED: all zeros up to T=2000 proven on the critical line via Arb ball arithmetic (1517 proven on-line zeros, matching N(T) at every 100-step checkpoint, no uncertified points). Halted: reached target. (iter 9, `exp_0009_certified_high`, certified_T=2000, skeptic=sound)
 
+- **[certified_zero_verification]** CERTIFIED: all zeros up to T=5000 proven on the critical line via Arb ball arithmetic (4785 proven on-line zeros, matching N(T) at every 250-step checkpoint, no uncertified points). Halted: count/parity mismatch at T=5250 (proven=4785, N(T)=4787, uncertified=0). (iter 10, `exp_0010_certified_10k`, certified_T=5000, skeptic=sound)
+
