@@ -49,6 +49,16 @@
     "track": "li_criterion",
     "updated_at": 1781680539.0787687
   },
+  "robin_inequality::max_robin_ratio_CA": {
+    "claim": "Hunted 1456 colossally abundant numbers n>5040 (up to ln n=2788.8, ~1211 digits): max Robin ratio f=0.997887 < 1. No violation -> consistent with RH on the true extremal family (closest approach 0.997887).",
+    "falsified": false,
+    "frontier_metric": "max_robin_ratio_CA",
+    "frontier_value": 0.9978871557561669,
+    "iteration": 13,
+    "module": "experiments.exp_0012_robin_colossally_abundant",
+    "track": "robin_inequality",
+    "updated_at": 1781682384.9155946
+  },
   "robin_inequality::n_primorials_checked": {
     "claim": "Robin's inequality holds for all 1995 primorials P_k > 5040 up to k=2000: max ratio f=0.77546 at k=6 (< 1). Consistent with RH on the primorial family.",
     "falsified": false,

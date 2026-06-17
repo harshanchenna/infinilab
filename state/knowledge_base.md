@@ -24,3 +24,5 @@ Skeptic-vetted, reproducible facts kept by the loop.
 
 - **[lehmer_pairs]** Resolved 267 zeros in (5000,5250]; closest pair at heights 5229.1986, 5229.2418 with raw gap 0.04325 and normalized gap delta=0.0463 (NEW lab record close pair (<0.291)). A genuine near-Lehmer pair; all gaps positive, consistent with RH. (iter 11, `exp_0011_lehmer_hunt_5250`, inverse_min_normalized_gap=21.6031, skeptic=sound)
 
+- **[robin_inequality]** Hunted 1456 colossally abundant numbers n>5040 (up to ln n=2788.8, ~1211 digits): max Robin ratio f=0.997887 < 1. No violation -> consistent with RH on the true extremal family (closest approach 0.997887). (iter 13, `exp_0012_robin_colossally_abundant`, max_robin_ratio_CA=0.997887, skeptic=sound)
+
