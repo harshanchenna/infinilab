@@ -30,6 +30,35 @@ of this proves RH — it maps the falsifiable, computable surface.
   x^rho/rho - ...). Residual checks: truncated zero-sum reconstructs the prime
   counting oscillations. Falsifiable consistency check, not a proof.
 
+## Certified (rigorous) verification — the gold standard
+- **Platt & Trudgian (2021): RH true up to height 3*10^12** (> 12.3*10^12 zeros),
+  done *rigorously* with interval/ball arithmetic and rigorously derived
+  truncation bounds -- not floating point. This is the benchmark for what
+  "certified" means here. <https://arxiv.org/abs/2004.09765>
+- **Tool: Arb** (via `python-flint`, available in this env) gives rigorous ball
+  enclosures of zeta with proven error bars; `acb.zeta()`. A sign change of the
+  real Hardy Z whose endpoint enclosures rigorously exclude 0 is a *proof* of a
+  zero on the line. -> infinilab track `certified_zero_verification` is a
+  faithful miniature of Platt-Trudgian. Cost: Arb zeta is slower than mpmath, so
+  certified heights are lower, but the result is theorem-grade.
+- Hardy Z certified via Z(t) = Re(exp(i*theta(t)) * zeta(1/2+it)), with
+  theta(t) = Im(lgamma(1/4+i t/2)) - (t/2) ln(pi), all as Arb enclosures.
+
+## de Bruijn-Newman, sharpened
+- **Rodgers-Tao (2018/2020): Lambda >= 0** (Newman's conjecture), so RH <=>
+  Lambda = 0. <https://terrytao.wordpress.com/2018/01/19/the-de-bruijn-newman-constant-is-non-negativ/>
+- Historic lower bounds came from **Lehmer pairs** (very close zeros), e.g.
+  Lambda > -1.14541*10^-11 (Saouter-Gourdon-Demichel) before Rodgers-Tao.
+  -> lehmer_pairs feeds dB-N; report Lehmer-pair "strength", cite an exact
+  formula before claiming a specific Lambda bound.
+
+## Explicit formula, made precise (explicit_formula track)
+- **von Mangoldt**: psi(x) = x - sum_rho x^rho/rho - ln(2*pi) - (1/2)ln(1-x^-2),
+  sum over nontrivial zeros as a symmetric limit |Im rho| <= T. Truncating at the
+  first N zeros reconstructs the prime oscillations of psi(x); residual vs the
+  exact psi(x) (sum of von Mangoldt Lambda(n)) is a falsifiable consistency
+  check. Under RH the zero-sum is O(x^{1/2+eps}). <https://arxiv.org/pdf/2312.00108>
+
 ## Statistics of the zeros (support, not equivalence)
 - **Montgomery-Odlyzko / GUE** (`zero_statistics`). Pair correlation of zeros
   matches GUE random-matrix statistics (Montgomery 1973 conjecture; Odlyzko's
