@@ -60,7 +60,7 @@ def record(module: str, run_skeptic: bool = True, budget: float = BUDGET) -> Led
     # Only spend skeptic tokens when the result actually matters (passed Tier-1
     # and would change the frontier or is a falsification).
     if run_skeptic and verdict.ok and verdict.result:
-        prev = Ledger.frontier_value(verdict.result["track"])
+        prev = Ledger.frontier_value(verdict.result["track"], verdict.result["frontier_metric"])
         worth_review = (
             verdict.result["falsified"]
             or prev is None
@@ -320,11 +320,12 @@ def _git_commit(module: str, rec: Ledger.Iteration) -> None:
 
 def cmd_status() -> None:
     frontier = Ledger.load_frontier()
-    print("FRONTIER (best per track):")
+    print("FRONTIER (best per track::metric):")
     if not frontier:
         print("  (empty)")
-    for track, info in sorted(frontier.items()):
-        print(f"  {track:20s} {info['frontier_metric']}={info['frontier_value']:g} "
+    for key, info in sorted(frontier.items()):
+        label = f"{info.get('track','?')}::{info['frontier_metric']}"
+        print(f"  {label:46s} {info['frontier_value']:g} "
               f"(iter {info['iteration']}, {'FALSIFIED' if info.get('falsified') else 'ok'})")
     print("\nRECENT LEDGER:")
     for r in _tail_ledger(10):

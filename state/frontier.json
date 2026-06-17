@@ -1,65 +1,72 @@
 {
-  "certified_zero_verification": {
+  "certified_zero_verification::certified_T": {
     "claim": "CERTIFIED: all zeros up to T=5000 proven on the critical line via Arb ball arithmetic (4785 proven on-line zeros, matching N(T) at every 250-step checkpoint, no uncertified points). Halted: count/parity mismatch at T=5250 (proven=4785, N(T)=4787, uncertified=0).",
     "falsified": false,
     "frontier_metric": "certified_T",
     "frontier_value": 5000.0,
     "iteration": 10,
     "module": "experiments.exp_0010_certified_10k",
+    "track": "certified_zero_verification",
     "updated_at": 1781681776.747841
   },
-  "explicit_formula": {
+  "explicit_formula::n_zeros_used": {
     "claim": "Explicit formula reconstructs psi(x) on 15 points (x in [10.5,80.5]): RMS residual 0.1257 with 200 zeros, down from 0.1540 with 100 zeros. Converging as predicted; consistent with RH.",
     "falsified": false,
     "frontier_metric": "n_zeros_used",
     "frontier_value": 200.0,
     "iteration": 8,
     "module": "experiments.exp_0008_explicit_formula",
+    "track": "explicit_formula",
     "updated_at": 1781681199.9571924
   },
-  "lehmer_pairs": {
+  "lehmer_pairs::n_zeros_scanned": {
     "claim": "Scanned first 300 zeros: smallest normalized gap 0.2911 between zeros #212 and #213 (heights 415.019, 415.455). All gaps positive; consistent with RH (no collision).",
     "falsified": false,
     "frontier_metric": "n_zeros_scanned",
     "frontier_value": 300.0,
     "iteration": 3,
     "module": "experiments.exp_0003_lehmer_pairs",
+    "track": "lehmer_pairs",
     "updated_at": 1781679476.5995862
   },
-  "li_criterion": {
+  "li_criterion::n_li_coefficients": {
     "claim": "First 12 Keiper-Li coefficients estimated from 400 zeros are all positive (min lambda=0.0231) and increase from K=200 to K=400 (converging from below). Consistent with Li's criterion / RH.",
     "falsified": false,
     "frontier_metric": "n_li_coefficients",
     "frontier_value": 12.0,
     "iteration": 6,
     "module": "experiments.exp_0006_li_positivity",
+    "track": "li_criterion",
     "updated_at": 1781680539.0787687
   },
-  "robin_inequality": {
+  "robin_inequality::n_primorials_checked": {
     "claim": "Robin's inequality holds for all 1995 primorials P_k > 5040 up to k=2000: max ratio f=0.77546 at k=6 (< 1). Consistent with RH on the primorial family.",
     "falsified": false,
     "frontier_metric": "n_primorials_checked",
     "frontier_value": 1995.0,
     "iteration": 5,
     "module": "experiments.exp_0005_robin_primorials",
+    "track": "robin_inequality",
     "updated_at": 1781679739.0067916
   },
-  "zero_statistics": {
+  "zero_statistics::n_zeros_sampled": {
     "claim": "First 200 zeta zeros: unfolded spacings fit GUE (KS=0.071) far better than Poisson (KS=0.353); mean gap 0.999. Consistent with Montgomery-Odlyzko.",
     "falsified": false,
     "frontier_metric": "n_zeros_sampled",
     "frontier_value": 200.0,
     "iteration": 2,
     "module": "experiments.exp_0002_gue_spacing",
+    "track": "zero_statistics",
     "updated_at": 1781677445.6669946
   },
-  "zero_verification": {
+  "zero_verification::T_verified": {
     "claim": "All 341 nontrivial zeros with 0 < Im < 600.00 lie on the critical line: Hardy Z has exactly N(T)=341 sign changes.",
     "falsified": false,
     "frontier_metric": "T_verified",
     "frontier_value": 600.0,
     "iteration": 4,
     "module": "experiments.exp_0004_critical_line_high",
+    "track": "zero_verification",
     "updated_at": 1781679589.6245468
   }
 }

@@ -70,8 +70,20 @@ def next_iteration_number() -> int:
     return n + 1
 
 
-def frontier_value(track: str) -> Optional[float]:
-    return load_frontier().get(track, {}).get("frontier_value")
+def frontier_key(track: str, metric: str) -> str:
+    """Frontiers are keyed by (track, metric) so different measurements on the
+    same track each advance on their own merits."""
+    return f"{track}::{metric}"
+
+
+def frontier_value(track: str, metric: Optional[str] = None) -> Optional[float]:
+    frontier = load_frontier()
+    if metric is not None:
+        return frontier.get(frontier_key(track, metric), {}).get("frontier_value")
+    # Back-compat: best over any metric on the track.
+    vals = [v["frontier_value"] for k, v in frontier.items()
+            if k.split("::", 1)[0] == track and "frontier_value" in v]
+    return max(vals) if vals else None
 
 
 def consider(verdict, skeptic_verdict: Optional[str] = None,
@@ -103,7 +115,8 @@ def consider(verdict, skeptic_verdict: Optional[str] = None,
         falsified = bool(r["falsified"])
 
         frontier = load_frontier()
-        prev = frontier.get(track, {}).get("frontier_value")
+        key = frontier_key(track, fmetric)
+        prev = frontier.get(key, {}).get("frontier_value")
         advanced = prev is None or fvalue > prev
 
         # A flawed skeptic verdict blocks promotion even if the number advanced:
@@ -113,7 +126,8 @@ def consider(verdict, skeptic_verdict: Optional[str] = None,
         promotable = skeptic_verdict in (None, "sound")
         if (falsified or advanced) and verdict.ok and promotable:
             kept = True
-            frontier[track] = {
+            frontier[key] = {
+                "track": track,
                 "frontier_metric": fmetric,
                 "frontier_value": fvalue,
                 "module": verdict.module,
