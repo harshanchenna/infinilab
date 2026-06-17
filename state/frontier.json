@@ -1,12 +1,12 @@
 {
   "certified_zero_verification": {
-    "claim": "CERTIFIED: at least 52 zeros proven on the critical line up to T=150.00 via Arb ball arithmetic; matches N(T)=52 (Turing) with no uncertified points -> RH verified up to T=150.00.",
+    "claim": "CERTIFIED: all zeros up to T=2000 proven on the critical line via Arb ball arithmetic (1517 proven on-line zeros, matching N(T) at every 100-step checkpoint, no uncertified points). Halted: reached target.",
     "falsified": false,
     "frontier_metric": "certified_T",
-    "frontier_value": 150.0,
-    "iteration": 7,
-    "module": "experiments.exp_0007_certified_verification",
-    "updated_at": 1781681099.1730983
+    "frontier_value": 2000.0,
+    "iteration": 9,
+    "module": "experiments.exp_0009_certified_high",
+    "updated_at": 1781681477.0385692
   },
   "explicit_formula": {
     "claim": "Explicit formula reconstructs psi(x) on 15 points (x in [10.5,80.5]): RMS residual 0.1257 with 200 zeros, down from 0.1540 with 100 zeros. Converging as predicted; consistent with RH.",

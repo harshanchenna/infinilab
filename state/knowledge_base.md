@@ -18,3 +18,5 @@ Skeptic-vetted, reproducible facts kept by the loop.
 
 - **[explicit_formula]** Explicit formula reconstructs psi(x) on 15 points (x in [10.5,80.5]): RMS residual 0.1257 with 200 zeros, down from 0.1540 with 100 zeros. Converging as predicted; consistent with RH. (iter 8, `exp_0008_explicit_formula`, n_zeros_used=200, skeptic=sound)
 
+- **[certified_zero_verification]** CERTIFIED: all zeros up to T=2000 proven on the critical line via Arb ball arithmetic (1517 proven on-line zeros, matching N(T) at every 100-step checkpoint, no uncertified points). Halted: reached target. (iter 9, `exp_0009_certified_high`, certified_T=2000, skeptic=sound)
+
