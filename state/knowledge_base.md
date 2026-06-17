@@ -16,3 +16,5 @@ Skeptic-vetted, reproducible facts kept by the loop.
 
 - **[certified_zero_verification]** CERTIFIED: at least 52 zeros proven on the critical line up to T=150.00 via Arb ball arithmetic; matches N(T)=52 (Turing) with no uncertified points -> RH verified up to T=150.00. (iter 7, `exp_0007_certified_verification`, certified_T=150, skeptic=sound)
 
+- **[explicit_formula]** Explicit formula reconstructs psi(x) on 15 points (x in [10.5,80.5]): RMS residual 0.1257 with 200 zeros, down from 0.1540 with 100 zeros. Converging as predicted; consistent with RH. (iter 8, `exp_0008_explicit_formula`, n_zeros_used=200, skeptic=sound)
+

@@ -8,6 +8,15 @@
     "module": "experiments.exp_0007_certified_verification",
     "updated_at": 1781681099.1730983
   },
+  "explicit_formula": {
+    "claim": "Explicit formula reconstructs psi(x) on 15 points (x in [10.5,80.5]): RMS residual 0.1257 with 200 zeros, down from 0.1540 with 100 zeros. Converging as predicted; consistent with RH.",
+    "falsified": false,
+    "frontier_metric": "n_zeros_used",
+    "frontier_value": 200.0,
+    "iteration": 8,
+    "module": "experiments.exp_0008_explicit_formula",
+    "updated_at": 1781681199.9571924
+  },
   "lehmer_pairs": {
     "claim": "Scanned first 300 zeros: smallest normalized gap 0.2911 between zeros #212 and #213 (heights 415.019, 415.455). All gaps positive; consistent with RH (no collision).",
     "falsified": false,
