@@ -1,4 +1,13 @@
 {
+  "lehmer_pairs": {
+    "claim": "Scanned first 300 zeros: smallest normalized gap 0.2911 between zeros #212 and #213 (heights 415.019, 415.455). All gaps positive; consistent with RH (no collision).",
+    "falsified": false,
+    "frontier_metric": "n_zeros_scanned",
+    "frontier_value": 300.0,
+    "iteration": 3,
+    "module": "experiments.exp_0003_lehmer_pairs",
+    "updated_at": 1781679476.5995862
+  },
   "zero_statistics": {
     "claim": "First 200 zeta zeros: unfolded spacings fit GUE (KS=0.071) far better than Poisson (KS=0.353); mean gap 0.999. Consistent with Montgomery-Odlyzko.",
     "falsified": false,
