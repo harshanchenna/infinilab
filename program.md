@@ -33,6 +33,24 @@ Three tiers, spine first:
 A result is **kept** iff it is a falsification, or it strictly advances its
 track's frontier AND the skeptic did not flag it.
 
+## Beyond blind search: grounding and self-optimization
+The loop is not just numerical experiments. Two further roles keep it honest,
+informed, and improving:
+- **scout** (read-only, literature grounding). Pulls cited findings from papers /
+  records into `research/rh_approaches.md` (RH methods) and
+  `research/landscape.md` (how autoresearch itself is done). The proposer must
+  consult these before inventing a method.
+- **meta** (process self-optimization). Reads the loop's own ledger/journal and
+  makes the *single* highest-value process change: fix a method the skeptic keeps
+  flagging, add a trusted harness primitive, retire a stalled track, tighten a
+  prompt. Logged in `research/meta_log.md`. Governance: meta may edit
+  prompts/tracks/program freely and add simple, auditable harness primitives
+  (commit prefix `meta(harness):`); it may never weaken a verifier or fabricate.
+
+The forever loop interleaves these (defaults: scout every 8 cycles, meta every
+10). This is the object / meta / meta-meta stack: experiments, improving the
+process, and tracking how the field approaches autoresearch.
+
 ## The portfolio (tracks)
 Rotate over these; push whichever frontier looks most tractable. (Canonical list
 lives in `harness/experiment.py::TRACKS`.)

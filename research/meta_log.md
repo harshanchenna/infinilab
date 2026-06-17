@@ -1,0 +1,33 @@
+# Meta log
+
+Dated record of process self-optimizations: signals observed, changes made,
+expected effect. Written by the `meta` role (and by humans seeding it).
+
+## 2026-06-17 — bootstrap: literature + meta layers added
+**Signal.** The loop was a blind numerical search with no literature grounding
+and no mechanism to improve its own process. Real autoresearch systems
+(co-scientist's literature grounding; Karpathy/AlphaEvolve editing the code that
+produces the metric) do both.
+**Change.** Added (1) a `scout` role (read-only, writes cited notes to
+`research/`), seeded `research/landscape.md` (how autoresearch is done) and
+`research/rh_approaches.md` (RH methods/records/pitfalls); (2) a `meta` role
+(this log) allowed to improve prompts/tracks/program and add harness primitives
+under governance; (3) loop interleaving of scout/meta; (4) proposer now must
+consult the research notes first.
+**Expected effect.** Experiments grounded in known methods; methodological
+weaknesses get fixed instead of repeated.
+
+## 2026-06-17 — open meta task: accurate Li coefficients
+**Signal.** Empirically (see session work toward `li_criterion`), the direct
+truncated zero-sum lambda_n = sum_rho [1-(1-1/rho)^n] converges slowly
+(~ln(T)/T): even with the exact closed form S_1 = 1+gamma/2-(1/2)ln(4pi)
+(matches lambda_1 to ~3e-11), the higher lambda_n (n>=2) come out ~3% low at
+K=400 zeros and approach from below. Good enough for a POSITIVITY claim (Li's
+criterion only needs lambda_n>=0), not for accurate values.
+**Proposed change (open).** Add a trusted `harness/rh_lib.py` primitive for Li
+coefficients with either (a) power sums S_j plus Richardson/tail extrapolation,
+or (b) the xi-function Taylor-coefficient method (Keiper 1992), with a built-in
+self-check against published values (lambda_1..lambda_6). Until then, the
+`li_criterion` track must scope claims to "positive, monotone-increasing-in-K
+lower-bound estimates, consistent with Li's criterion", never to precise values.
+**Status.** OPEN — first concrete job for the `meta` optimizer / harness work.

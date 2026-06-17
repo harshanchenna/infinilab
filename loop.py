@@ -201,6 +201,69 @@ def _tail_ledger(k: int) -> list:
 
 
 # --------------------------------------------------------------------------- #
+# Literature grounding (scout) and process self-optimization (meta)
+# --------------------------------------------------------------------------- #
+def _invoke_agent(prompt_file: str, task: str, model: str, timeout: int = 1200) -> bool:
+    """Run a claude agent in the repo with a role prompt + task. Returns success."""
+    with open(os.path.join(ROOT, "prompts", prompt_file)) as f:
+        system = f.read()
+    perm_mode = os.environ.get("INFINILAB_PERMISSION_MODE", "acceptEdits")
+    cmd = ["claude", "-p", task, "--model", model,
+           "--permission-mode", perm_mode, "--append-system-prompt", system]
+    try:
+        subprocess.run(cmd, cwd=ROOT, timeout=timeout, text=True, stdin=subprocess.DEVNULL)
+        return True
+    except (FileNotFoundError, subprocess.TimeoutExpired) as e:
+        print(f"   agent failed: {e}")
+        return False
+
+
+def scout(focus: str) -> None:
+    """Literature grounding pass: ingest cited findings into research/ notes."""
+    model = os.environ.get("INFINILAB_SCOUT_MODEL", "sonnet")
+    print(f"-> scout ({model}) on focus: {focus!r}")
+    task = (
+        f"Scout focus: {focus}. Use web search/fetch to find credible, cited "
+        f"findings and integrate them into the research notes under research/ "
+        f"(rh_approaches.md for RH material, landscape.md for autoresearch "
+        f"methodology). Every claim needs a source. End with candidate next "
+        f"experiments tied to our tracks. Edit only files under research/."
+    )
+    if _invoke_agent("scout.md", task, model):
+        _git_commit_paths(["research/"], f"scout: ground research on {focus}")
+
+
+def meta() -> None:
+    """Process self-optimization pass: improve prompts/harness/tracks from history."""
+    model = os.environ.get("INFINILAB_META_MODEL", "opus")
+    print(f"-> meta ({model}) reviewing loop history")
+    task = (
+        "Run a meta-optimization pass. Read state/ledger.jsonl, state/frontier.json, "
+        "journal/, and the research notes. Identify the single highest-value process "
+        "improvement (a stalled track, a method the skeptic keeps flagging, a missing "
+        "harness primitive, prompt drift), make that change per your governance rules, "
+        "and append a dated entry to research/meta_log.md explaining it. Prefer one "
+        "sharp, reversible change."
+    )
+    if _invoke_agent("meta.md", task, model):
+        _git_commit_paths(["."], "meta: self-optimization pass")
+
+
+def _git_commit_paths(paths: list[str], subject: str) -> None:
+    try:
+        subprocess.run(["git", "add"] + paths, cwd=ROOT, check=True)
+        # Only commit if something actually changed.
+        diff = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=ROOT)
+        if diff.returncode == 0:
+            print("   (no changes to commit)")
+            return
+        subprocess.run(["git", "commit", "-q", "-m", subject], cwd=ROOT, check=True)
+        print(f"   committed: {subject}")
+    except subprocess.CalledProcessError as e:
+        print(f"   git commit skipped: {e}")
+
+
+# --------------------------------------------------------------------------- #
 # One full cycle and the forever loop
 # --------------------------------------------------------------------------- #
 def step(budget: float = BUDGET) -> bool:
@@ -213,14 +276,25 @@ def step(budget: float = BUDGET) -> bool:
 
 
 def loop(max_iter: int | None = None, budget: float = BUDGET) -> None:
+    # Periodically ground in the literature (scout) and self-optimize (meta), so
+    # the loop stays literature-aware and improves its own process -- not just a
+    # blind numerical search. Cadence is configurable.
+    scout_every = int(os.environ.get("INFINILAB_SCOUT_EVERY", "8"))
+    meta_every = int(os.environ.get("INFINILAB_META_EVERY", "10"))
+    scout_foci = ["zero_verification", "li_criterion", "de_bruijn_newman",
+                  "robin_inequality", "explicit_formula", "the autoresearch landscape itself"]
     i = 0
     while max_iter is None or i < max_iter:
         i += 1
         print(f"\n===== cycle {i} =====")
+        if scout_every and i % scout_every == 1 and i > 1:
+            scout(scout_foci[(i // scout_every) % len(scout_foci)])
         ok = step(budget)
         if not ok:
             print("cycle produced nothing; backing off 30s")
             time.sleep(30)
+        if meta_every and i % meta_every == 0:
+            meta()
     print("loop done")
 
 
@@ -271,6 +345,9 @@ def main(argv: list[str]) -> int:
     pl = sub.add_parser("loop")
     pl.add_argument("--max", type=int, default=None)
     pl.add_argument("--budget", type=float, default=BUDGET)
+    psc = sub.add_parser("scout")
+    psc.add_argument("focus", nargs="?", default="the autoresearch landscape itself")
+    sub.add_parser("meta")
     args = p.parse_args(argv)
 
     if args.cmd == "status":
@@ -281,6 +358,10 @@ def main(argv: list[str]) -> int:
         step(args.budget)
     elif args.cmd == "loop":
         loop(args.max, args.budget)
+    elif args.cmd == "scout":
+        scout(args.focus)
+    elif args.cmd == "meta":
+        meta()
     return 0
 
 

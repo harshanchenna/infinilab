@@ -20,6 +20,10 @@ for the research program and `README.md` for the architecture.
 5. `journal/NNNN-*.md` — a human-readable writeup per *kept* iteration.
 6. `experiments/exp_*.py` — every experiment ever proposed (the full search
    tree, in git).
+7. `research/rh_approaches.md`, `research/landscape.md`, `research/meta_log.md`
+   — literature grounding (RH methods + how autoresearch is done) and the log of
+   process self-optimizations. Read these to know which methods are blessed,
+   which are flagged as weak, and what the meta-optimizer has changed.
 
 If `state/` and `journal/` agree with the latest `experiments/`, you are in a
 consistent state and can continue. If they disagree (e.g. an experiment file
@@ -32,7 +36,12 @@ python loop.py status                     # show frontier + recent ledger
 python loop.py record experiments.exp_0001_critical_line   # verify+record one
 python loop.py step                       # one propose->verify->skeptic->commit
 python loop.py loop --max 20              # run 20 cycles (omit --max for forever)
+python loop.py scout li_criterion         # literature grounding pass (writes research/)
+python loop.py meta                       # process self-optimization pass
 ```
+The forever `loop` interleaves `scout` (every INFINILAB_SCOUT_EVERY cycles,
+default 8) and `meta` (every INFINILAB_META_EVERY, default 10) so it stays
+literature-aware and improves its own process.
 Models (env): `INFINILAB_PROPOSER_MODEL` (default `sonnet`),
 `INFINILAB_SKEPTIC_MODEL` (default `opus`). The proposer/skeptic shell out to the
 `claude` CLI; set `INFINILAB_SKIP_PERMISSIONS=0` to require approval for edits.
