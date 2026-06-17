@@ -12,3 +12,5 @@ Skeptic-vetted, reproducible facts kept by the loop.
 
 - **[robin_inequality]** Robin's inequality holds for all 1995 primorials P_k > 5040 up to k=2000: max ratio f=0.77546 at k=6 (< 1). Consistent with RH on the primorial family. (iter 5, `exp_0005_robin_primorials`, n_primorials_checked=1995, skeptic=sound)
 
+- **[li_criterion]** First 12 Keiper-Li coefficients estimated from 400 zeros are all positive (min lambda=0.0231) and increase from K=200 to K=400 (converging from below). Consistent with Li's criterion / RH. (iter 6, `exp_0006_li_positivity`, n_li_coefficients=12, skeptic=sound)
+

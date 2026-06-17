@@ -30,4 +30,10 @@ or (b) the xi-function Taylor-coefficient method (Keiper 1992), with a built-in
 self-check against published values (lambda_1..lambda_6). Until then, the
 `li_criterion` track must scope claims to "positive, monotone-increasing-in-K
 lower-bound estimates, consistent with Li's criterion", never to precise values.
-**Status.** OPEN — first concrete job for the `meta` optimizer / harness work.
+**Status.** PARTIALLY ADDRESSED (2026-06-17). Added harness primitives
+`li_S1_exact`, `li_power_sums`, `li_coefficients_estimate`, `li_selfcheck`
+(commit `meta(harness):`). exp_0006 uses them for an honestly-scoped positivity
+claim (two truncations K and 2K, require positive + monotone-increasing), kept,
+skeptic verdict sound. STILL OPEN: a *rigorous* certified-positive version with a
+proven tail bound (interval arithmetic on the S_j tail) so positivity becomes a
+theorem-grade signal rather than "consistent with".
