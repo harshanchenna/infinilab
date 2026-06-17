@@ -169,6 +169,59 @@ def poisson_spacing_cdf(s):
     return 1 - mp.e ** (-s)
 
 
+# --------------------------------------------------------------------------- #
+# Li / Keiper coefficients (li_criterion track)
+# --------------------------------------------------------------------------- #
+# Added by the meta-optimizer (see research/meta_log.md). RH <=> lambda_n >= 0
+# for all n (Li 1997; Bombieri-Lagarias 1999). We compute via power sums:
+#     lambda_n = sum_{j=1}^n C(n,j) (-1)^(j+1) S_j,    S_j = sum_rho rho^(-j).
+# S_1 has an exact closed form; S_j (j>=2) are truncated over the given zero
+# heights. Truncation makes the lambda_n ESTIMATES, not exact values: they
+# approach the true (positive) coefficients from below as more zeros are used.
+# So treat them as lower-bound-style estimates good for a POSITIVITY signal,
+# never as precise values. A rigorous certified-positive version (with a proven
+# tail bound) remains an open meta task.
+def li_S1_exact():
+    """Exact S_1 = sum_rho 1/rho = 1 + gamma/2 - (1/2) ln(4 pi)."""
+    return 1 + mp.euler / 2 - mp.log(4 * mp.pi) / 2
+
+
+def li_power_sums(gammas, N):
+    """Power sums S_j = sum_rho rho^(-j) for j=1..N.
+
+    S_1 uses the exact closed form; S_j (j>=2) are summed over rho = 1/2 + i*g
+    and their conjugates for g in `gammas` (absolutely convergent for j>=2).
+    """
+    S = {1: li_S1_exact()}
+    rhos = [mp.mpf("0.5") + 1j * g for g in gammas]
+    for j in range(2, N + 1):
+        S[j] = mp.fsum(2 * mp.re(rho ** (-j)) for rho in rhos)
+    return S
+
+
+def li_coefficients_estimate(gammas, N):
+    """Estimate the first N Li coefficients lambda_1..lambda_N from zero heights.
+
+    Returns a list of mpf. These approach the true coefficients from below as
+    len(gammas) grows; use for positivity, not exact values. (Alternating
+    binomial sum -> watch cancellation for large N at fixed precision.)
+    """
+    S = li_power_sums(gammas, N)
+    out = []
+    for n in range(1, N + 1):
+        v = mp.fsum(mp.binomial(n, j) * (-1) ** (j + 1) * S[j] for j in range(1, n + 1))
+        out.append(v)
+    return out
+
+
+def li_selfcheck(tol=1e-8):
+    """Audit: lambda_1 must equal the exact S_1 (independent of any zeros)."""
+    lam1 = li_coefficients_estimate([], 1)[0]
+    err = abs(lam1 - li_S1_exact())
+    assert err < tol, f"li_selfcheck failed: lambda_1 error {err}"
+    return True
+
+
 def ks_distance(samples, cdf):
     """Kolmogorov-Smirnov distance between empirical samples and a CDF.
 
