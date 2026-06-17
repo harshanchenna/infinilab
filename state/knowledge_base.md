@@ -10,3 +10,5 @@ Skeptic-vetted, reproducible facts kept by the loop.
 
 - **[zero_verification]** All 341 nontrivial zeros with 0 < Im < 600.00 lie on the critical line: Hardy Z has exactly N(T)=341 sign changes. (iter 4, `exp_0004_critical_line_high`, T_verified=600, skeptic=sound)
 
+- **[robin_inequality]** Robin's inequality holds for all 1995 primorials P_k > 5040 up to k=2000: max ratio f=0.77546 at k=6 (< 1). Consistent with RH on the primorial family. (iter 5, `exp_0005_robin_primorials`, n_primorials_checked=1995, skeptic=sound)
+

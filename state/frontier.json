@@ -8,6 +8,15 @@
     "module": "experiments.exp_0003_lehmer_pairs",
     "updated_at": 1781679476.5995862
   },
+  "robin_inequality": {
+    "claim": "Robin's inequality holds for all 1995 primorials P_k > 5040 up to k=2000: max ratio f=0.77546 at k=6 (< 1). Consistent with RH on the primorial family.",
+    "falsified": false,
+    "frontier_metric": "n_primorials_checked",
+    "frontier_value": 1995.0,
+    "iteration": 5,
+    "module": "experiments.exp_0005_robin_primorials",
+    "updated_at": 1781679739.0067916
+  },
   "zero_statistics": {
     "claim": "First 200 zeta zeros: unfolded spacings fit GUE (KS=0.071) far better than Poisson (KS=0.353); mean gap 0.999. Consistent with Montgomery-Odlyzko.",
     "falsified": false,
