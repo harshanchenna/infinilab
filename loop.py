@@ -1,27 +1,23 @@
 #!/usr/bin/env python3
-"""infinilab driver -- the forever-loop.
+"""infinilab AUTOMATED driver (legacy) -- the self-driving forever-loop.
 
-Modeled on Karpathy's autoresearch loop, adapted from "optimize one training
-script" to "grow a verified library of RH experiments". One iteration:
+PREFER `lab.py` + AGENTS.md. The recommended way to run infinilab is now
+agent-driven: an agent (Claude Code, Codex, a human) reads AGENTS.md and drives
+the deterministic `lab.py` CLI itself, with its own tools. That works in any
+harness and needs no `claude` subprocess.
+
+This module is the *automated* alternative: it shells out to the `claude` CLI to
+play the proposer/scout/meta roles unattended. Keep it for hands-off batch runs;
+it depends on the `claude` binary being installed. One iteration:
 
     propose -> verify (Tier-1, hard) -> skeptic (Tier-2, soft) -> record -> commit
 
-Subcommands
------------
-    python loop.py status                 Show the frontier and recent ledger.
-    python loop.py record <module> [--no-skeptic]
-                                          Verify+record an existing experiment
-                                          (used to seed, or to re-run one).
     python loop.py step                   One full propose->...->commit cycle.
     python loop.py loop [--max N]         Run cycles forever (or N times).
+    python loop.py record <module> [--no-skeptic]   (delegates to harness.driver)
 
-The proposer is a cheap model (Sonnet) that WRITES a new experiments/exp_*.py.
-The skeptic is a stronger model (Opus) that only vets the claim. Models are set
-via env: INFINILAB_PROPOSER_MODEL (default sonnet), INFINILAB_SKEPTIC_MODEL
-(default opus).
-
-Everything the loop needs to resume lives in git: experiments/, state/, and
-journal/. A fresh LLM can read AGENTS.md + state/ and continue.
+Models via env: INFINILAB_PROPOSER_MODEL (sonnet), INFINILAB_SKEPTIC_MODEL
+(opus). Everything needed to resume lives in git: experiments/, state/, journal/.
 """
 from __future__ import annotations
 
@@ -39,6 +35,7 @@ from harness import ledger as Ledger
 from harness import skeptic as Skeptic
 from harness import experiment as E
 from harness import project as P
+from harness import driver as D
 
 ROOT = os.path.dirname(os.path.abspath(__file__))            # repo root (engine)
 PROJECT_DIR = P.DIR                                          # active project dir
@@ -53,81 +50,29 @@ BUDGET = 300.0
 # Recording a verified experiment
 # --------------------------------------------------------------------------- #
 def record(module: str, run_skeptic: bool = True, budget: float = BUDGET) -> Ledger.Iteration:
-    """Verify an experiment module, run the skeptic if it passed and advances,
-    update the ledger/frontier, and write a journal entry if kept."""
+    """Verify an experiment module, run the (claude) skeptic if it passed and
+    advances, then delegate ledger/journal/KB bookkeeping to harness.driver.
+
+    The deterministic mechanics live in harness.driver (shared with lab.py); the
+    only thing this automated path adds is shelling out to the claude skeptic.
+    """
     print(f"-> verifying {module} (budget {budget:.0f}s)")
     verdict = V.verify(module, budget)
     print("   " + verdict.summary())
 
     skeptic_verdict = skeptic_notes = None
-    # Only spend skeptic tokens when the result actually matters (passed Tier-1
-    # and would change the frontier or is a falsification).
-    if run_skeptic and verdict.ok and verdict.result:
-        prev = Ledger.frontier_value(verdict.result["track"], verdict.result["frontier_metric"])
-        worth_review = (
-            verdict.result["falsified"]
-            or prev is None
-            or verdict.result["frontier_value"] > prev
-        )
-        if worth_review:
-            print(f"-> skeptic ({Skeptic.SKEPTIC_MODEL}) reviewing claim ...")
-            skeptic_verdict, skeptic_notes = Skeptic.review(module, verdict)
-            print(f"   skeptic: {skeptic_verdict} -- {(skeptic_notes or '')[:120]}")
+    if run_skeptic and D.needs_skeptic(verdict):
+        print(f"-> skeptic ({Skeptic.SKEPTIC_MODEL}) reviewing claim ...")
+        skeptic_verdict, skeptic_notes = Skeptic.review(module, verdict)
+        print(f"   skeptic: {skeptic_verdict} -- {(skeptic_notes or '')[:120]}")
 
     rec = Ledger.consider(verdict, skeptic_verdict, skeptic_notes)
     print(f"   ledger #{rec.iteration}: kept={rec.kept} advanced={rec.advanced_frontier}")
-
     if rec.kept:
-        _write_journal(rec, verdict)
-        _update_knowledge_base(rec, verdict)
+        path = D.write_journal(rec, verdict)
+        D.update_knowledge_base(rec)
+        print(f"   journal: {os.path.relpath(path, ROOT)}")
     return rec
-
-
-def _write_journal(rec: Ledger.Iteration, verdict: V.Verdict) -> None:
-    os.makedirs(JOURNAL_DIR, exist_ok=True)
-    path = os.path.join(JOURNAL_DIR, f"{rec.iteration:04d}-{rec.module.split('.')[-1]}.md")
-    m = verdict.manifest or {}
-    r = verdict.result or {}
-    lines = [
-        f"# Iteration {rec.iteration:04d} -- {m.get('title', rec.module)}",
-        "",
-        f"- **module**: `{rec.module}`",
-        f"- **track**: `{rec.track}`",
-        f"- **status**: {rec.status}  |  **kept**: {rec.kept}  |  **falsified**: {rec.falsified}",
-        f"- **frontier**: {rec.frontier_metric} = {rec.frontier_value}",
-        f"- **skeptic**: {rec.skeptic_verdict or 'n/a'}"
-        + (f" -- {rec.skeptic_notes}" if rec.skeptic_notes else ""),
-        f"- **elapsed**: {rec.elapsed_seconds:.1f}s",
-        "",
-        "## Hypothesis",
-        m.get("hypothesis", "(none)"),
-        "",
-        "## Claim (entailed by the numbers)",
-        r.get("claim", "(none)"),
-        "",
-        "## Metrics",
-        "```json",
-        json.dumps(r.get("metrics", {}), indent=2),
-        "```",
-        "",
-        "## Evidence",
-        "```json",
-        json.dumps(r.get("evidence", {}), indent=2),
-        "```",
-    ]
-    with open(path, "w") as f:
-        f.write("\n".join(lines) + "\n")
-    print(f"   journal: {os.path.relpath(path, ROOT)}")
-
-
-def _update_knowledge_base(rec: Ledger.Iteration, verdict: V.Verdict) -> None:
-    tag = "FALSIFICATION! " if rec.falsified else ""
-    entry = (
-        f"- **[{rec.track}]** {tag}{rec.claim} "
-        f"(iter {rec.iteration}, `{rec.module.split('.')[-1]}`, "
-        f"{rec.frontier_metric}={rec.frontier_value:g}, skeptic={rec.skeptic_verdict or 'n/a'})"
-    )
-    Ledger.append_knowledge(entry)
 
 
 # --------------------------------------------------------------------------- #
@@ -196,14 +141,7 @@ def _proposer_context() -> str:
 
 
 def _tail_ledger(k: int) -> list:
-    path = Ledger.LEDGER_PATH
-    if not os.path.exists(path):
-        return []
-    with open(path) as f:
-        rows = [json.loads(line) for line in f if line.strip()]
-    slim = [{kk: r.get(kk) for kk in ("iteration", "module", "status", "track",
-            "frontier_value", "kept", "skeptic_verdict")} for r in rows[-k:]]
-    return slim
+    return D.tail_ledger(k)
 
 
 # --------------------------------------------------------------------------- #
@@ -326,18 +264,7 @@ def _git_commit(module: str, rec: Ledger.Iteration) -> None:
 
 
 def cmd_status() -> None:
-    frontier = Ledger.load_frontier()
-    print("FRONTIER (best per track::metric):")
-    if not frontier:
-        print("  (empty)")
-    for key, info in sorted(frontier.items()):
-        label = f"{info.get('track','?')}::{info['frontier_metric']}"
-        print(f"  {label:46s} {info['frontier_value']:g} "
-              f"(iter {info['iteration']}, {'FALSIFIED' if info.get('falsified') else 'ok'})")
-    print("\nRECENT LEDGER:")
-    for r in _tail_ledger(10):
-        print(f"  #{r['iteration']:>3} {r['status']:<13} {r.get('track') or '-':18} "
-              f"kept={r['kept']} skeptic={r.get('skeptic_verdict')}")
+    print(D.status_text())
 
 
 def main(argv: list[str]) -> int:
