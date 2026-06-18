@@ -73,5 +73,35 @@
     },
     "parents": [],
     "created_at": 1781743970.3093157
+  },
+  {
+    "id": 5,
+    "path": "projects/cap_set/state/evolve/cap_priority/programs/prog_0005.py",
+    "island": 1,
+    "valid": true,
+    "fitness": 286.0,
+    "scores": {
+      "4": 20,
+      "5": 34,
+      "6": 82,
+      "7": 150
+    },
+    "parents": [],
+    "created_at": 1781744143.756859
+  },
+  {
+    "id": 6,
+    "path": "projects/cap_set/state/evolve/cap_priority/programs/prog_0006.py",
+    "island": 2,
+    "valid": true,
+    "fitness": 276.0,
+    "scores": {
+      "4": 18,
+      "5": 34,
+      "6": 73,
+      "7": 151
+    },
+    "parents": [],
+    "created_at": 1781744143.9064236
   }
 ]

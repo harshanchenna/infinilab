@@ -20,23 +20,23 @@
     "updated_at": 1781741866.1840115
   },
   "cap_construction::cap_size_dim6": {
-    "claim": "Iterated local search finds a VALID cap of size 81 in F_3^6 (is_cap-verified), improving on the prior random-restart frontier 77; known maximum 112, gap 31.",
+    "claim": "A single deterministic FunSearch-evolved priority builds a VALID cap of size 82 in F_3^6 (is_cap-verified), beating the prior best-of-many random-restart frontier 81 -- evolved structure out-performs best-of-many search in one shot. Known maximum 112, gap 30.",
     "falsified": false,
     "frontier_metric": "cap_size_dim6",
-    "frontier_value": 81.0,
-    "iteration": 5,
-    "module": "projects.cap_set.experiments.exp_0005_ils_dim6",
+    "frontier_value": 82.0,
+    "iteration": 7,
+    "module": "projects.cap_set.experiments.exp_0007_evolved_dim6",
     "track": "cap_construction",
-    "updated_at": 1781742558.1509314
+    "updated_at": 1781744190.2790322
   },
   "cap_construction::cap_size_dim7": {
-    "claim": "A FunSearch-evolved deterministic priority builds a VALID cap of size 148 in F_3^7 (is_cap-verified), opening the dim-7 frontier (first-fit baseline 128); known maximum 236, gap 88. The candidate was selected by a rigorous evaluator (is_cap audits every construction), demonstrating the evolution mechanism end-to-end.",
+    "claim": "A further-evolved deterministic priority builds a VALID cap of size 151 in F_3^7 (is_cap-verified), improving on the prior evolved frontier 148; known maximum 236, gap 85.",
     "falsified": false,
     "frontier_metric": "cap_size_dim7",
-    "frontier_value": 148.0,
-    "iteration": 6,
-    "module": "projects.cap_set.experiments.exp_0006_evolved_dim7",
+    "frontier_value": 151.0,
+    "iteration": 8,
+    "module": "projects.cap_set.experiments.exp_0008_evolved_dim7",
     "track": "cap_construction",
-    "updated_at": 1781744020.3622391
+    "updated_at": 1781744190.60284
   }
 }
