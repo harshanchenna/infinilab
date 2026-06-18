@@ -10,14 +10,14 @@
     "updated_at": 1781742466.2129266
   },
   "cap_construction::cap_size_dim5": {
-    "claim": "Random-restart greedy (26954 restarts) finds a VALID cap of size 39 in F_3^5 (verified by is_cap), beating the first-fit baseline 32; known maximum 45, gap 6. Best seed 874.",
+    "claim": "A single deterministic FunSearch-evolved priority builds a VALID cap of size 40 in F_3^5 (is_cap-verified), beating the prior best-of-many random-restart frontier 39; known maximum 45, gap 5. Evolution now leads every recorded cap frontier (dims 4-7).",
     "falsified": false,
     "frontier_metric": "cap_size_dim5",
-    "frontier_value": 39.0,
-    "iteration": 2,
-    "module": "projects.cap_set.experiments.exp_0002_random_restart",
+    "frontier_value": 40.0,
+    "iteration": 9,
+    "module": "projects.cap_set.experiments.exp_0009_evolved_dim5",
     "track": "cap_construction",
-    "updated_at": 1781741866.1840115
+    "updated_at": 1781744296.039736
   },
   "cap_construction::cap_size_dim6": {
     "claim": "A single deterministic FunSearch-evolved priority builds a VALID cap of size 82 in F_3^6 (is_cap-verified), beating the prior best-of-many random-restart frontier 81 -- evolved structure out-performs best-of-many search in one shot. Known maximum 112, gap 30.",

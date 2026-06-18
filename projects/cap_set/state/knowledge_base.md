@@ -18,3 +18,5 @@ Skeptic-vetted, reproducible facts kept by the loop.
 
 - **[cap_construction]** A further-evolved deterministic priority builds a VALID cap of size 151 in F_3^7 (is_cap-verified), improving on the prior evolved frontier 148; known maximum 236, gap 85. (iter 8, `exp_0008_evolved_dim7`, cap_size_dim7=151, skeptic=sound)
 
+- **[cap_construction]** A single deterministic FunSearch-evolved priority builds a VALID cap of size 40 in F_3^5 (is_cap-verified), beating the prior best-of-many random-restart frontier 39; known maximum 45, gap 5. Evolution now leads every recorded cap frontier (dims 4-7). (iter 9, `exp_0009_evolved_dim5`, cap_size_dim5=40, skeptic=sound)
+

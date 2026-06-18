@@ -18,9 +18,20 @@ Frontiers are keyed per dimension: `cap_construction::cap_size_dim<n>`.
 ## The method to evolve (FunSearch-style)
 `cap.greedy_cap(n, priority)` builds a cap by adding points in descending
 `priority` order, skipping any point that would complete a line. The ONLY
-creative part is the `priority` function over F_3^n vectors. Baselines:
-first-fit (constant priority) gives 16 (n=4), 32 (n=5); random-restart greedy
-reaches 18, 38, ~75 (n=4,5,6). Beating those needs a cleverer priority.
+creative part is the `priority(v, n)` function over F_3^n vectors. Use the real
+evolution loop (`lab.py evolve`, see `prompts/evolve.md`): the island program DB
+under `state/evolve/cap_priority/` holds champions; `eval` scores any candidate
+rigorously (is_cap audits every build) and registers it.
+
+**Key lesson (recorded):** smooth priorities with many ties collapse to first-fit
+(16/32/64/128 over dims 4-7). What works is *fine, near-injective structure*. Two
+families found so far: (a) a base-`m` positional **hash** `sin(Σ(v_i+1)·m^(i+1))`
+that breaks symmetry, and (b) **weight-layering** — order by Hamming weight under
+a hash tiebreak — which beats best-of-many random restart.
+
+**Current evolved champions (dims 4-7): 20 / 40 / 82 / 151** (vs known maxima
+20/45/112/236). dim4 is the proven optimum; dim5/6/7 each beat the prior
+random-restart/ILS frontier with a single DETERMINISTIC evolved priority.
 
 ## Rules
 - Never edit `lib/`. Compose it. A new construction must pass `is_cap`.
@@ -34,5 +45,8 @@ reaches 18, 38, ~75 (n=4,5,6). Beating those needs a cleverer priority.
 - `cap_lower_bound` — asymptotic capacity via product/recursive constructions.
 
 ## Current focus
-Climb the per-dimension frontier in n=4..7 with better priority functions and
-randomized search; then attempt a product construction for the asymptotic bound.
+Close the remaining gaps to the known maxima (dim5 40->45, dim6 82->112, dim7
+151->236) with richer evolved priorities — try multi-key layering (weight +
+coordinate-pattern + hash), and consider letting the priority encode a small
+amount of search. Then attempt a product/recursive construction for the
+asymptotic `cap_lower_bound` track.
