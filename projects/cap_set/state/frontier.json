@@ -28,5 +28,15 @@
     "module": "projects.cap_set.experiments.exp_0005_ils_dim6",
     "track": "cap_construction",
     "updated_at": 1781742558.1509314
+  },
+  "cap_construction::cap_size_dim7": {
+    "claim": "A FunSearch-evolved deterministic priority builds a VALID cap of size 148 in F_3^7 (is_cap-verified), opening the dim-7 frontier (first-fit baseline 128); known maximum 236, gap 88. The candidate was selected by a rigorous evaluator (is_cap audits every construction), demonstrating the evolution mechanism end-to-end.",
+    "falsified": false,
+    "frontier_metric": "cap_size_dim7",
+    "frontier_value": 148.0,
+    "iteration": 6,
+    "module": "projects.cap_set.experiments.exp_0006_evolved_dim7",
+    "track": "cap_construction",
+    "updated_at": 1781744020.3622391
   }
 }

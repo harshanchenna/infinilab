@@ -12,3 +12,5 @@ Skeptic-vetted, reproducible facts kept by the loop.
 
 - **[cap_construction]** Iterated local search finds a VALID cap of size 81 in F_3^6 (is_cap-verified), improving on the prior random-restart frontier 77; known maximum 112, gap 31. (iter 5, `exp_0005_ils_dim6`, cap_size_dim6=81, skeptic=n/a)
 
+- **[cap_construction]** A FunSearch-evolved deterministic priority builds a VALID cap of size 148 in F_3^7 (is_cap-verified), opening the dim-7 frontier (first-fit baseline 128); known maximum 236, gap 88. The candidate was selected by a rigorous evaluator (is_cap audits every construction), demonstrating the evolution mechanism end-to-end. (iter 6, `exp_0006_evolved_dim7`, cap_size_dim7=148, skeptic=sound)
+

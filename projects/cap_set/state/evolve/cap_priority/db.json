@@ -13,5 +13,65 @@
     },
     "parents": [],
     "created_at": 1781743724.6887906
+  },
+  {
+    "id": 1,
+    "path": "projects/cap_set/state/evolve/cap_priority/programs/prog_0001.py",
+    "island": 1,
+    "valid": true,
+    "fitness": 271.0,
+    "scores": {
+      "4": 20,
+      "5": 35,
+      "6": 73,
+      "7": 143
+    },
+    "parents": [],
+    "created_at": 1781743969.7953439
+  },
+  {
+    "id": 2,
+    "path": "projects/cap_set/state/evolve/cap_priority/programs/prog_0002.py",
+    "island": 2,
+    "valid": true,
+    "fitness": 271.0,
+    "scores": {
+      "4": 18,
+      "5": 38,
+      "6": 71,
+      "7": 144
+    },
+    "parents": [],
+    "created_at": 1781743970.012957
+  },
+  {
+    "id": 3,
+    "path": "projects/cap_set/state/evolve/cap_priority/programs/prog_0003.py",
+    "island": 3,
+    "valid": true,
+    "fitness": 272.0,
+    "scores": {
+      "4": 17,
+      "5": 35,
+      "6": 75,
+      "7": 145
+    },
+    "parents": [],
+    "created_at": 1781743970.1602259
+  },
+  {
+    "id": 4,
+    "path": "projects/cap_set/state/evolve/cap_priority/programs/prog_0004.py",
+    "island": 0,
+    "valid": true,
+    "fitness": 267.0,
+    "scores": {
+      "4": 16,
+      "5": 34,
+      "6": 69,
+      "7": 148
+    },
+    "parents": [],
+    "created_at": 1781743970.3093157
   }
 ]
