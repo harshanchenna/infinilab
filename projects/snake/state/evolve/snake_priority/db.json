@@ -1,0 +1,17 @@
+[
+  {
+    "id": 0,
+    "path": "projects/snake/state/evolve/snake_priority/programs/prog_0000_seed.py",
+    "island": 0,
+    "valid": true,
+    "fitness": 123.0,
+    "scores": {
+      "5": 12,
+      "6": 21,
+      "7": 34,
+      "8": 56
+    },
+    "parents": [],
+    "created_at": 1781749248.7596195
+  }
+]

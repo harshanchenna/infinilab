@@ -140,7 +140,7 @@ def status() -> str:
            f"programs: {len(rows)}", ""]
     # champion per dim
     champ = _champions(rows)
-    out.append("CHAMPION cap per dimension (best valid program):")
+    out.append("CHAMPION score per dimension (best valid program):")
     for dim in sorted(champ):
         pid, size = champ[dim]
         out.append(f"  dim {dim}: {size}  (prog {pid})")
