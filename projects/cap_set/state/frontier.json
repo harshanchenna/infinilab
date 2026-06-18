@@ -8,5 +8,15 @@
     "module": "projects.cap_set.experiments.exp_0002_random_restart",
     "track": "cap_construction",
     "updated_at": 1781741866.1840115
+  },
+  "cap_construction::cap_size_dim6": {
+    "claim": "Random-restart greedy (10462 restarts) finds a VALID cap of size 77 in F_3^6 (verified by is_cap), beating the first-fit baseline 64; known maximum 112, gap 35. Best seed 1045.",
+    "falsified": false,
+    "frontier_metric": "cap_size_dim6",
+    "frontier_value": 77.0,
+    "iteration": 3,
+    "module": "projects.cap_set.experiments.exp_0003_dim6_search",
+    "track": "cap_construction",
+    "updated_at": 1781742045.6465929
   }
 }
