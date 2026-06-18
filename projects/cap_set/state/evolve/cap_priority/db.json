@@ -1,0 +1,17 @@
+[
+  {
+    "id": 0,
+    "path": "projects/cap_set/state/evolve/cap_priority/programs/prog_0000_seed.py",
+    "island": 0,
+    "valid": true,
+    "fitness": 240.0,
+    "scores": {
+      "4": 16,
+      "5": 32,
+      "6": 64,
+      "7": 128
+    },
+    "parents": [],
+    "created_at": 1781743724.6887906
+  }
+]
