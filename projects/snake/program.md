@@ -43,8 +43,26 @@ tiebreak.
 - `snake_construction` — a long induced PATH in dimension n (frontier = edges).
 - `coil_construction` — a long induced CYCLE (coil) in dimension n (later).
 
+## Two builders (both audited by is_induced_path)
+- `greedy_snake(n, priority)` — fast, myopic; used for cheap EVOLVE scoring.
+- `longest_snake_dfs(n, priority, budget_seconds)` — priority-guided, time-boxed
+  backtracking (first branch = greedy, then backtracks keeping the longest path).
+  Always ≥ greedy; reaches small-n optima. Used to PROMOTE the frontier.
+
+## Current frontier (edges) and lesson
+| n | greedy (evolved) | backtracking | proven optimum |
+|---|---|---|---|
+| 5 | 13 | 13 | **13** ✅ |
+| 6 | 25 | 26 | **26** ✅ |
+| 7 | 46 | 47 | 50 (gap 3) |
+| 8 | 76 | 81 | 98 (gap 17) |
+
+**Lesson:** evolved priority gets greedy close, but greedy plateaus (dim6 stuck at
+25, dim8 at 76); priority-guided **backtracking** closed dim6 to the optimum and
+improved dim7/8. The evolved priority still matters — it orders the DFS branches.
+
 ## Current focus
-Validate the engine by reaching the known optima for small n (dim5=13 reachable
-by a hash priority already), then push n=6,7,8 toward 26/50/98 with richer
-evolved priorities (foresight + structural layering). Next capability if greedy
-plateaus: a bounded-backtracking builder primitive in `lib/snake.py`.
+Close the remaining gaps at n=7 (47→50) and n=8 (81→98): give the DFS a larger
+budget and/or a sharper evolved priority for branch ordering; consider restart
+from multiple start vertices and a longest-path lower-bound prune. Then open the
+`coil_construction` track (longest induced CYCLE) with an analogous verifier.

@@ -102,3 +102,74 @@ def greedy_snake(n: int, priority: Callable[[int], float], start: int = 0) -> li
 def snake_length(path: list[int]) -> int:
     """Length of a snake in EDGES."""
     return len(path) - 1
+
+
+def longest_snake_dfs(n: int, priority: Optional[Callable[[int], float]] = None,
+                      budget_seconds: float = 10.0, start: int = 0) -> list[int]:
+    """Priority-guided, time-boxed depth-first BACKTRACKING search for a long snake.
+
+    Greedy is myopic and plateaus; this explores the search tree depth-first,
+    visiting extensions in descending `priority` (so the first branch reproduces
+    greedy), backtracking to try alternatives, and keeping the longest induced
+    path seen before the wall-clock budget expires. The returned path is >= the
+    greedy result by construction and is still audited by `is_induced_path`.
+
+    The chordless invariant is maintained incrementally with an adjacency-count
+    map (a vertex w extending endpoint e is legal iff `adj[w] == 1`), pushed and
+    popped on the recursion so backtracking is exact.
+    """
+    import time
+
+    pri = priority or (lambda v: 0.0)
+    deadline = time.time() + budget_seconds
+
+    path = [start]
+    visited = {start}
+    adj: dict[int, int] = defaultdict(int)
+    for w in neighbors(start, n):
+        adj[w] += 1
+    best = [start]
+
+    def dfs() -> None:
+        if time.time() > deadline:
+            return
+        e = path[-1]
+        cand = [w for w in neighbors(e, n) if w not in visited and adj[w] == 1]
+        cand.sort(key=pri, reverse=True)
+        for w in cand:
+            if time.time() > deadline:
+                return
+            path.append(w)
+            visited.add(w)
+            for u in neighbors(w, n):
+                adj[u] += 1
+            if len(path) > len(best):
+                best[:] = path
+            dfs()
+            for u in neighbors(w, n):
+                adj[u] -= 1
+            visited.discard(w)
+            path.pop()
+
+    dfs()
+    return best
+
+
+def _self_check() -> None:
+    """Trust-by-simplicity self-check: the DFS must find the known optima for
+    small n, and is_induced_path must accept/reject correctly. Run: python -m
+    projects.snake.lib.snake"""
+    assert is_induced_path([0, 1, 3], 2) == (True, None)           # 00-01-11: induced, len 2
+    assert is_induced_path([0, 1, 3, 2], 2)[0] is False            # 0~2 chord (the 4-cycle)
+    assert is_induced_path([0, 1, 0], 2)[0] is False               # duplicate vertex
+    assert is_induced_path([0, 3], 2)[0] is False                  # 00-11 not an edge
+    assert is_induced_path([0, 1, 2], 2)[0] is False               # 0~2 chord (dist 1)
+    for n, opt in ((2, 2), (3, 4), (4, 7), (5, 13)):
+        p = longest_snake_dfs(n, budget_seconds=8.0)
+        ok, _ = is_induced_path(p, n)
+        assert ok and snake_length(p) == opt, (n, snake_length(p), opt)
+    print("snake self-check OK: is_induced_path + DFS reach optima for n=2..5")
+
+
+if __name__ == "__main__":
+    _self_check()
