@@ -1,4 +1,14 @@
 {
+  "cap_construction::cap_size_dim4": {
+    "claim": "Iterated local search finds a VALID cap of size 20 in F_3^4 (is_cap-verified) = the PROVEN MAXIMUM 20: the loop reaches the optimum where one is known.",
+    "falsified": false,
+    "frontier_metric": "cap_size_dim4",
+    "frontier_value": 20.0,
+    "iteration": 4,
+    "module": "projects.cap_set.experiments.exp_0004_ils_dim4_optimal",
+    "track": "cap_construction",
+    "updated_at": 1781742466.2129266
+  },
   "cap_construction::cap_size_dim5": {
     "claim": "Random-restart greedy (26954 restarts) finds a VALID cap of size 39 in F_3^5 (verified by is_cap), beating the first-fit baseline 32; known maximum 45, gap 6. Best seed 874.",
     "falsified": false,
@@ -10,13 +20,13 @@
     "updated_at": 1781741866.1840115
   },
   "cap_construction::cap_size_dim6": {
-    "claim": "Random-restart greedy (10462 restarts) finds a VALID cap of size 77 in F_3^6 (verified by is_cap), beating the first-fit baseline 64; known maximum 112, gap 35. Best seed 1045.",
+    "claim": "Iterated local search finds a VALID cap of size 81 in F_3^6 (is_cap-verified), improving on the prior random-restart frontier 77; known maximum 112, gap 31.",
     "falsified": false,
     "frontier_metric": "cap_size_dim6",
-    "frontier_value": 77.0,
-    "iteration": 3,
-    "module": "projects.cap_set.experiments.exp_0003_dim6_search",
+    "frontier_value": 81.0,
+    "iteration": 5,
+    "module": "projects.cap_set.experiments.exp_0005_ils_dim6",
     "track": "cap_construction",
-    "updated_at": 1781742045.6465929
+    "updated_at": 1781742558.1509314
   }
 }

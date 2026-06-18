@@ -46,6 +46,51 @@ def is_cap(points: Iterable[tuple]) -> tuple[bool, Optional[tuple]]:
     return True, None
 
 
+def _safe_to_add(v: tuple, S: set) -> bool:
+    """True iff adding v to cap S creates no line (for all a in S, third not in S)."""
+    for a in S:
+        if third_point(v, a) in S:
+            return False
+    return True
+
+
+def ruin_and_recreate(n: int, budget_seconds: float, seed: int = 0,
+                      ruin_frac: float = 0.3, init_restarts: int = 50) -> list[tuple]:
+    """Iterated local search for a large cap in F_3^n.
+
+    Start from the best of a few random-restart greedy caps, then repeatedly
+    "ruin" (drop a random ruin_frac of points) and "recreate" (greedily re-add
+    points in a fresh random order), keeping any larger valid cap. Every
+    intermediate set is a cap by construction; the caller still audits with
+    is_cap. Deterministic given (n, seed, budget) up to wall-clock timing.
+    """
+    import random
+    import time
+
+    rng = random.Random(seed)
+    vecs = list(vectors(n))
+
+    best: list[tuple] = []
+    for s in range(init_restarts):
+        r = random.Random((seed, s).__hash__())
+        pr = {v: r.random() for v in vecs}
+        C = greedy_cap(n, lambda v: pr[v])
+        if len(C) > len(best):
+            best = C
+
+    deadline = time.time() + budget_seconds
+    while time.time() < deadline:
+        S = {v for v in best if rng.random() > ruin_frac}
+        order = vecs[:]
+        rng.shuffle(order)
+        for v in order:
+            if v not in S and _safe_to_add(v, S):
+                S.add(v)
+        if len(S) > len(best):
+            best = list(S)
+    return best
+
+
 def greedy_cap(n: int, priority: Callable[[tuple], float]) -> list[tuple]:
     """Greedily build a cap in F_3^n, adding points in descending `priority`.
 
