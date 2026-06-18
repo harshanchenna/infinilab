@@ -22,7 +22,7 @@ import time
 
 import mpmath as mp
 
-from harness import rh_certified as C
+from projects.riemann.lib import rh_certified as C
 from harness import experiment as E
 
 MANIFEST = {

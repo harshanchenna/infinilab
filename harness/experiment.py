@@ -31,20 +31,12 @@ from __future__ import annotations
 import math
 from typing import Any
 
-# The canonical research tracks. The portfolio the loop rotates over.
-# Adding a track is a deliberate human/PR-level decision, not something the
-# loop does silently -- it keeps the frontier well-defined.
-TRACKS = {
-    "zero_verification": "All zeros up to height T lie on the critical line (Z sign changes == N(T)).",
-    "certified_zero_verification": "Theorem-grade: zeros on the line up to T PROVEN via Arb ball arithmetic.",
-    "zero_statistics": "Normalized zero spacings follow GUE (Montgomery-Odlyzko).",
-    "lehmer_pairs": "Search for anomalously close zero pairs; smallest normalized gap.",
-    "li_criterion": "Li/Keiper coefficients lambda_n are non-negative (lambda_n >= 0 <=> RH).",
-    "de_bruijn_newman": "Bounds on the de Bruijn-Newman constant Lambda (RH <=> Lambda <= 0).",
-    "explicit_formula": "Riemann's explicit formula linking zeros and primes; residual checks.",
-    "robin_inequality": "Robin's inequality sigma(n) < e^gamma n log log n for n > 5040 (<=> RH).",
-    "conjecture_discovery": "Search for new closed forms / integer relations among zeros and constants (Ramanujan-Machine style).",
-}
+from harness import project as _P
+
+# The research tracks come from the ACTIVE project (harness/project.py), so this
+# contract is problem-independent. Adding a track is a deliberate project-level
+# decision -- it keeps the frontier well-defined.
+TRACKS = _P.TRACKS
 
 # Novelty classes. The loop must privilege genuine-unknown work over reproducing
 # known facts. Be honest: most verification experiments are "reproduction".
@@ -52,7 +44,7 @@ NOVELTY = {
     "reproduction": "Re-derives a known result; validates machinery, not research.",
     "frontier-search": "Open-ended search whose outcome is genuinely unknown to us.",
     "conjecture": "Proposes a new empirical relation/pattern, tested to high precision.",
-    "falsification-attempt": "Actively hunts for a counterexample that would disprove RH (or a sub-conjecture).",
+    "falsification-attempt": "Actively hunts for a counterexample that would disprove the project's conjecture.",
 }
 
 REQUIRED_FIELDS = (
@@ -63,7 +55,7 @@ REQUIRED_FIELDS = (
     "frontier_metric",
     "frontier_value",
     "falsified",
-    "consistent_with_rh",
+    "consistent_with_goal",
     "evidence",
 )
 
@@ -76,15 +68,21 @@ def result(
     frontier_metric: str,
     frontier_value: float,
     falsified: bool,
-    consistent_with_rh: bool,
     evidence: dict,
+    consistent_with_goal: bool | None = None,
+    consistent_with_rh: bool | None = None,  # back-compat alias (riemann project)
     novelty: str = "reproduction",
 ) -> dict:
     """Build a Result dict, coercing mpmath numbers to plain floats/strings.
 
-    `novelty` defaults to "reproduction" so older experiments stay valid; genuine
-    frontier work must set it explicitly (see NOVELTY).
+    `consistent_with_goal` means the result is consistent with the project's main
+    conjecture holding. `consistent_with_rh` is accepted as a legacy alias.
+    `novelty` defaults to "reproduction"; genuine frontier work sets it (NOVELTY).
     """
+    if consistent_with_goal is None:
+        consistent_with_goal = consistent_with_rh
+    if consistent_with_goal is None:
+        raise ResultError("result() requires consistent_with_goal (or legacy consistent_with_rh)")
     return {
         "track": track,
         "novelty": novelty,
@@ -93,7 +91,7 @@ def result(
         "frontier_metric": frontier_metric,
         "frontier_value": float(frontier_value),
         "falsified": bool(falsified),
-        "consistent_with_rh": bool(consistent_with_rh),
+        "consistent_with_goal": bool(consistent_with_goal),
         "evidence": _jsonify(evidence),
     }
 
@@ -124,9 +122,9 @@ def validate(res: Any) -> dict:
         raise ResultError("evidence must be a dict")
     if res["falsified"] and not res["evidence"]:
         raise ResultError("falsified=True requires non-empty evidence (jackpot must be auditable)")
-    # A falsification of RH cannot also be 'consistent with RH'.
-    if res["falsified"] and res["consistent_with_rh"]:
-        raise ResultError("falsified and consistent_with_rh cannot both be True")
+    # A falsification of the conjecture cannot also be 'consistent with' it.
+    if res["falsified"] and res["consistent_with_goal"]:
+        raise ResultError("falsified and consistent_with_goal cannot both be True")
     return res
 
 

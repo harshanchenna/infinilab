@@ -38,10 +38,13 @@ from harness import verify as V
 from harness import ledger as Ledger
 from harness import skeptic as Skeptic
 from harness import experiment as E
+from harness import project as P
 
-ROOT = os.path.dirname(os.path.abspath(__file__))
-EXPERIMENTS_DIR = os.path.join(ROOT, "experiments")
-JOURNAL_DIR = os.path.join(ROOT, "journal")
+ROOT = os.path.dirname(os.path.abspath(__file__))            # repo root (engine)
+PROJECT_DIR = P.DIR                                          # active project dir
+EXPERIMENTS_DIR = P.path("experiments")
+JOURNAL_DIR = P.path("journal")
+EXPERIMENTS_PKG = P.EXPERIMENTS_PKG                          # dotted module prefix
 PROPOSER_MODEL = os.environ.get("INFINILAB_PROPOSER_MODEL", "sonnet")
 BUDGET = 300.0
 
@@ -138,17 +141,20 @@ def propose(budget: float = BUDGET) -> str | None:
     n = Ledger.next_iteration_number()
     expected_prefix = f"exp_{n:04d}_"
     context = _proposer_context()
-    with open(os.path.join(ROOT, "prompts", "proposer.md")) as f:
+    rel_exp = os.path.relpath(EXPERIMENTS_DIR, ROOT)   # e.g. projects/riemann/experiments
+    rel_proj = os.path.relpath(PROJECT_DIR, ROOT)      # e.g. projects/riemann
+    with open(P.path("prompts", "proposer.md")) as f:
         system = f.read()
 
     task = (
-        f"Write the next experiment as a NEW file "
-        f"experiments/{expected_prefix}<slug>.py (slug = short snake_case name). "
-        f"It MUST satisfy the contract in harness/experiment.py: a MANIFEST dict "
-        f"and a run(budget_seconds)->dict built via harness.experiment.result(). "
-        f"Compose only trusted primitives from harness/rh_lib.py. Pick a track "
-        f"and a frontier to push, given the current state below. Do not edit "
-        f"anything under harness/. After writing, stop.\n\n"
+        f"Active project: {P.NAME} ({P.CONJECTURE}). Write the next experiment as a "
+        f"NEW file {rel_exp}/{expected_prefix}<slug>.py (slug = short snake_case name). "
+        f"It MUST satisfy the contract in harness/experiment.py: a MANIFEST dict and a "
+        f"run(budget_seconds)->dict built via harness.experiment.result(). Compose only "
+        f"trusted primitives from {rel_proj}/lib/ and read this project's notes under "
+        f"{rel_proj}/research/ and {rel_proj}/program.md. Pick a track and a frontier to "
+        f"push, given the current state below. Do not edit anything under harness/ or "
+        f"{rel_proj}/lib/. After writing, stop.\n\n"
         f"=== CURRENT STATE ===\n{context}\n"
     )
 
@@ -172,7 +178,7 @@ def propose(budget: float = BUDGET) -> str | None:
     if not matches:
         print(f"   proposer produced no {expected_prefix}*.py file")
         return None
-    module = "experiments." + os.path.splitext(os.path.basename(matches[-1]))[0]
+    module = EXPERIMENTS_PKG + "." + os.path.splitext(os.path.basename(matches[-1]))[0]
     print(f"   proposer wrote {module}")
     return module
 
@@ -205,7 +211,7 @@ def _tail_ledger(k: int) -> list:
 # --------------------------------------------------------------------------- #
 def _invoke_agent(prompt_file: str, task: str, model: str, timeout: int = 1200) -> bool:
     """Run a claude agent in the repo with a role prompt + task. Returns success."""
-    with open(os.path.join(ROOT, "prompts", prompt_file)) as f:
+    with open(P.path("prompts", prompt_file)) as f:
         system = f.read()
     perm_mode = os.environ.get("INFINILAB_PERMISSION_MODE", "acceptEdits")
     cmd = ["claude", "-p", task, "--model", model,
@@ -219,31 +225,32 @@ def _invoke_agent(prompt_file: str, task: str, model: str, timeout: int = 1200) 
 
 
 def scout(focus: str) -> None:
-    """Literature grounding pass: ingest cited findings into research/ notes."""
+    """Literature grounding pass: ingest cited findings into the project's research/."""
     model = os.environ.get("INFINILAB_SCOUT_MODEL", "sonnet")
+    rel = os.path.relpath(PROJECT_DIR, ROOT)
     print(f"-> scout ({model}) on focus: {focus!r}")
     task = (
-        f"Scout focus: {focus}. Use web search/fetch to find credible, cited "
-        f"findings and integrate them into the research notes under research/ "
-        f"(rh_approaches.md for RH material, landscape.md for autoresearch "
-        f"methodology). Every claim needs a source. End with candidate next "
-        f"experiments tied to our tracks. Edit only files under research/."
+        f"Active project: {P.NAME}. Scout focus: {focus}. Use web search/fetch to find "
+        f"credible, cited findings and integrate them into this project's research notes "
+        f"under {rel}/research/. Every claim needs a source. End with candidate next "
+        f"experiments tied to our tracks. Edit only files under {rel}/research/."
     )
     if _invoke_agent("scout.md", task, model):
-        _git_commit_paths(["research/"], f"scout: ground research on {focus}")
+        _git_commit_paths([os.path.join(rel, "research")], f"scout: ground research on {focus}")
 
 
 def meta() -> None:
     """Process self-optimization pass: improve prompts/harness/tracks from history."""
     model = os.environ.get("INFINILAB_META_MODEL", "opus")
+    rel = os.path.relpath(PROJECT_DIR, ROOT)
     print(f"-> meta ({model}) reviewing loop history")
     task = (
-        "Run a meta-optimization pass. Read state/ledger.jsonl, state/frontier.json, "
-        "journal/, and the research notes. Identify the single highest-value process "
-        "improvement (a stalled track, a method the skeptic keeps flagging, a missing "
-        "harness primitive, prompt drift), make that change per your governance rules, "
-        "and append a dated entry to research/meta_log.md explaining it. Prefer one "
-        "sharp, reversible change."
+        f"Active project: {P.NAME}. Run a meta-optimization pass. Read {rel}/state/ledger.jsonl, "
+        f"{rel}/state/frontier.json, {rel}/journal/, and {rel}/research/. Identify the single "
+        f"highest-value process improvement (a stalled track, a method the skeptic keeps "
+        f"flagging, a missing project lib primitive, prompt drift), make that change per your "
+        f"governance rules, and append a dated entry to {rel}/research/meta_log.md. Prefer one "
+        f"sharp, reversible change."
     )
     if _invoke_agent("meta.md", task, model):
         _git_commit_paths(["."], "meta: self-optimization pass")

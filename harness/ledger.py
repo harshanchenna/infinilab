@@ -20,7 +20,10 @@ import time
 from dataclasses import dataclass, asdict
 from typing import Optional
 
-STATE_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "state")
+from harness import project as _P
+
+# State lives under the ACTIVE project so each project has its own memory.
+STATE_DIR = _P.path("state")
 LEDGER_PATH = os.path.join(STATE_DIR, "ledger.jsonl")
 FRONTIER_PATH = os.path.join(STATE_DIR, "frontier.json")
 KB_PATH = os.path.join(STATE_DIR, "knowledge_base.md")

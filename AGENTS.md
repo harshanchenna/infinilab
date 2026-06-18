@@ -1,63 +1,58 @@
 # AGENTS.md — how to pick up this project cold
 
-You are an LLM (or a human) resuming infinilab from nothing but this repo.
-Everything you need is in git. Read this, then continue the loop.
+You are an LLM (or human) resuming infinilab from nothing but this repo.
+Everything needed is in git. Read this, then continue the loop.
 
 ## What this is
-An autoresearch-style **forever-loop** on the Riemann Hypothesis, inspired by
-Andrej Karpathy's `autoresearch`. The loop repeatedly: proposes a small
-falsifiable experiment, runs it under a hard verifier, has a skeptic vet the
-claim, keeps it only if it advances a frontier, and commits. See `program.md`
-for the research program and `README.md` for the architecture.
+A **project-agnostic** autoresearch forever-loop with a hard, un-gameable
+verifier (FunSearch / AlphaEvolve / Karpathy-autoresearch lineage). The generic
+engine lives in `harness/` + `loop.py`; each research problem is a **project**
+under `projects/<name>/`. See `README.md` for architecture and
+`docs/opportunities.md` for which problems suit this loop best.
 
-## Where the state lives (read these first, in order)
-1. `program.md` — the goal, the rules, the track portfolio, current focus.
-2. `state/frontier.json` — the best result per track ("the best"). This is the
-   live leaderboard the loop is trying to beat.
-3. `state/knowledge_base.md` — skeptic-vetted, reproducible facts kept so far.
-4. `state/ledger.jsonl` — append-only history of every iteration attempt
-   (kept or not), one JSON object per line.
-5. `journal/NNNN-*.md` — a human-readable writeup per *kept* iteration.
-6. `experiments/exp_*.py` — every experiment ever proposed (the full search
-   tree, in git).
-7. `research/rh_approaches.md`, `research/landscape.md`, `research/meta_log.md`
-   — literature grounding (RH methods + how autoresearch is done) and the log of
-   process self-optimizations. Read these to know which methods are blessed,
-   which are flagged as weak, and what the meta-optimizer has changed.
+## Pick the active project
+Set `INFINILAB_PROJECT=projects.<name>` (default `projects.riemann`). Everything
+else (tracks, state, prompts, experiments, lib) is resolved from it by
+`harness/project.py`. Current projects:
+- `projects.riemann` — Riemann Hypothesis (the first, mature project: 15
+  iterations across 8 tracks, incl. a certified zero-verification tier and a
+  de Bruijn-Newman bound from a self-discovered Lehmer pair).
+- `projects.cap_set` — cap sets in F_3^n (FunSearch-style construction).
 
-If `state/` and `journal/` agree with the latest `experiments/`, you are in a
-consistent state and can continue. If they disagree (e.g. an experiment file
-exists with no ledger row), re-run it with `python loop.py record <module>`.
+## Where a project's state lives (read in this order)
+For the active project dir `projects/<name>/`:
+1. `program.md` — goal, rules, track portfolio, current focus.
+2. `state/frontier.json` — best result per `track::metric` (the leaderboard).
+3. `state/knowledge_base.md` — skeptic-vetted facts.
+4. `state/ledger.jsonl` — append-only history of every iteration attempt.
+5. `journal/NNNN-*.md` — a writeup per kept iteration.
+6. `experiments/exp_*.py` — every experiment ever proposed.
+7. `research/` — literature grounding + `meta_log.md` (process self-optimization).
 
 ## How to run
 ```bash
-pip install mpmath numpy sympy            # or: pip install -e .
-python loop.py status                     # show frontier + recent ledger
-python loop.py record experiments.exp_0001_critical_line   # verify+record one
-python loop.py step                       # one propose->verify->skeptic->commit
-python loop.py loop --max 20              # run 20 cycles (omit --max for forever)
-python loop.py scout li_criterion         # literature grounding pass (writes research/)
-python loop.py meta                       # process self-optimization pass
+pip install -e .
+python loop.py status
+python loop.py record projects.riemann.experiments.exp_0001_critical_line
+python loop.py step                 # one propose->verify->skeptic->commit cycle
+python loop.py loop --max 20        # many cycles (scout every 8, meta every 10)
+INFINILAB_PROJECT=projects.cap_set python loop.py status   # switch project
 ```
-The forever `loop` interleaves `scout` (every INFINILAB_SCOUT_EVERY cycles,
-default 8) and `meta` (every INFINILAB_META_EVERY, default 10) so it stays
-literature-aware and improves its own process.
-Models (env): `INFINILAB_PROPOSER_MODEL` (default `sonnet`),
-`INFINILAB_SKEPTIC_MODEL` (default `opus`). The proposer/skeptic shell out to the
-`claude` CLI; set `INFINILAB_SKIP_PERMISSIONS=0` to require approval for edits.
+Models (env): `INFINILAB_PROPOSER_MODEL` (sonnet), `INFINILAB_SKEPTIC_MODEL`
+(opus). The loop shells out to the `claude` CLI for propose/scout/meta.
 
-## How to extend the research yourself (without the driver)
-You can act as the proposer directly:
-1. Read `state/frontier.json` and pick a track + frontier to beat.
-2. Write `experiments/exp_NNNN_<slug>.py` to the contract in
-   `harness/experiment.py` (a `MANIFEST` and `run(budget_seconds)->dict` built
-   with `harness.experiment.result(...)`). Compose `harness/rh_lib.py`; never
-   edit `harness/`.
-3. `python loop.py record experiments.exp_NNNN_<slug>` to verify, vet, record.
-4. Commit with a detailed message (see git log for the house style).
+## Add a new project
+Create `projects/<name>/` with: `project.py` (NAME, CONJECTURE, TRACKS), `lib/`
+(trusted primitives = the rigorous verifier), `prompts/` (proposer, skeptic,
+scout, meta), `program.md`, and `experiments/__init__.py`. The engine creates
+`state/` and `journal/` on first record. Then act as the proposer (write
+`experiments/exp_NNNN_*.py` to the contract in `harness/experiment.py`) and
+`INFINILAB_PROJECT=projects.<name> python loop.py record <module>`.
 
-## Invariants you must preserve
-- `harness/` is the trusted spine; do not edit it to make a result pass.
-- Claims are entailed by numbers; never claim to prove RH.
-- A falsification needs concrete evidence and will be heavily scrutinized.
-- Commit often, with detailed messages, so the next agent can pick up cleanly.
+## Invariants
+- `harness/` and a project's `lib/` are the trusted spine; never edit them to
+  make a result pass.
+- Claims must be entailed by the numbers. Prefer honest nulls to overclaims; the
+  skeptic polices novelty overclaims (`reproduction` vs genuine frontier work).
+- A falsification needs concrete, auditable evidence.
+- Commit often with detailed messages so the next agent can pick up cleanly.

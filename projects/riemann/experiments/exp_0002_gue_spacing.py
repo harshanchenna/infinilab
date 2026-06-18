@@ -19,7 +19,7 @@ from __future__ import annotations
 
 import time
 
-from harness import rh_lib as L
+from projects.riemann.lib import rh_lib as L
 from harness import experiment as E
 
 MANIFEST = {

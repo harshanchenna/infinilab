@@ -27,8 +27,10 @@ import os
 import subprocess
 from typing import Optional
 
+from harness import project as _P
+
 SKEPTIC_MODEL = os.environ.get("INFINILAB_SKEPTIC_MODEL", "opus")
-PROMPT_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "prompts", "skeptic.md")
+PROMPT_PATH = _P.path("prompts", "skeptic.md")
 
 
 def review(module_path: str, verdict, timeout: int = 600) -> tuple[Optional[str], Optional[str]]:

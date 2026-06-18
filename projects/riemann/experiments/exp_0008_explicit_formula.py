@@ -24,7 +24,7 @@ import time
 import mpmath as mp
 import sympy
 
-from harness import rh_lib as L
+from projects.riemann.lib import rh_lib as L
 from harness import experiment as E
 
 MANIFEST = {
