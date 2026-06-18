@@ -26,3 +26,5 @@ Skeptic-vetted, reproducible facts kept by the loop.
 
 - **[robin_inequality]** Hunted 1456 colossally abundant numbers n>5040 (up to ln n=2788.8, ~1211 digits): max Robin ratio f=0.997887 < 1. No violation -> consistent with RH on the true extremal family (closest approach 0.997887). (iter 13, `exp_0012_robin_colossally_abundant`, max_robin_ratio_CA=0.997887, skeptic=sound)
 
+- **[de_bruijn_newman]** From the Lehmer pair at heights 5229.1986, 5229.2418 (index 4765, gap 0.04325): valid Lehmer pair ((5/4)delta^2 g_k=0.0107<1, g_k=4.5858), giving Lambda >= -2.341e-04. A genuine (modest) lower bound on the de Bruijn-Newman constant from a pair we discovered; consistent with RH (Lambda<=0 unproven) and with Lambda>=0 (Rodgers-Tao). (iter 15, `exp_0014_de_bruijn_newman`, lambda_lower_bound=-0.000234116, skeptic=sound)
+

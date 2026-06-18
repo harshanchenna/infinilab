@@ -9,6 +9,16 @@
     "track": "certified_zero_verification",
     "updated_at": 1781681776.747841
   },
+  "de_bruijn_newman::lambda_lower_bound": {
+    "claim": "From the Lehmer pair at heights 5229.1986, 5229.2418 (index 4765, gap 0.04325): valid Lehmer pair ((5/4)delta^2 g_k=0.0107<1, g_k=4.5858), giving Lambda >= -2.341e-04. A genuine (modest) lower bound on the de Bruijn-Newman constant from a pair we discovered; consistent with RH (Lambda<=0 unproven) and with Lambda>=0 (Rodgers-Tao).",
+    "falsified": false,
+    "frontier_metric": "lambda_lower_bound",
+    "frontier_value": -0.00023411610422963117,
+    "iteration": 15,
+    "module": "experiments.exp_0014_de_bruijn_newman",
+    "track": "de_bruijn_newman",
+    "updated_at": 1781740945.1314843
+  },
   "explicit_formula::n_zeros_used": {
     "claim": "Explicit formula reconstructs psi(x) on 15 points (x in [10.5,80.5]): RMS residual 0.1257 with 200 zeros, down from 0.1540 with 100 zeros. Converging as predicted; consistent with RH.",
     "falsified": false,
